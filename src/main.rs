@@ -49,7 +49,7 @@ mod tests {
             .body(Body::empty())
             .unwrap();
 
-        let response = serve_dir("/", "static/").oneshot(req).await.unwrap();
+        let response = serve_dir("/", "static/".into()).oneshot(req).await.unwrap();
         assert_eq!(response.status(), StatusCode::OK);
     }
 }
