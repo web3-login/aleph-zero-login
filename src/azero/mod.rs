@@ -11,12 +11,11 @@ mod router_contract;
 pub use router_contract::Instance;
 
 pub async fn get_owner(domain: String) -> Result<String, Box<dyn std::error::Error>> {
-    let conn = Connection::new(Chain::AzeroTest.get_url()).await;
+    let conn = Connection::new(Chain::Azero.get_url()).await;
 
-    let contract: ink_primitives::AccountId =
-        AccountId32::from_str(Chain::AzeroTest.get_contract())
-            .unwrap()
-            .to_account_id();
+    let contract: ink_primitives::AccountId = AccountId32::from_str(Chain::Azero.get_contract())
+        .unwrap()
+        .to_account_id();
 
     let contract = Instance::from(contract);
     let owner_result = contract.get_address(&conn, domain).await?;
@@ -54,7 +53,7 @@ mod tests {
     #[tokio::test]
     async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let account: &str = "5Esx8QLfERemJmBmhZ9aJDgBmw69vLaE6rN5FNx3VPZDY1fn";
-        let domain: String = "chriamue.tzero".to_string();
+        let domain: String = "chriamue.azero".to_string();
 
         let address = get_owner(domain).await?;
 

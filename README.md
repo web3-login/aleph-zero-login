@@ -8,7 +8,20 @@ cargo build
 cargo run
 ```
 
+## Test
+
+```sh
+cargo test --features=ssr -- --nocapture
+```
+
 ## Configuration
+
+### Contracts
+
+```sh
+ink-wrapper -m assets/azero_router_metadata.json | rustfmt --edition 2021 > src/azero/router_contract.rs
+ink-wrapper -m assets/tzero_router_metadata.json | rustfmt --edition 2021 > src/tzero/router_contract.rs
+```
 
 ### Polkadot Node Metadata
 
