@@ -39,7 +39,7 @@ js-sys = "0.3"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 wasm-logger = "0.2"
-web-sys = "0.3"
+web-sys = { version = "0.3", features = ["HtmlSelectElement"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 axum = "0.7.3"
@@ -52,7 +52,9 @@ tower-http = { version = "0.5.0", features = ["fs", "trace"] }
 web3-login = { git = "https://github.com/web3-login/web3-login" }
 
 ink-wrapper-types = "0.4.0"
-scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale = { package = "parity-scale-codec", version = "3", default-features = false, features = [
+    "derive",
+] }
 ink_primitives = "4.0.1"
 aleph_client = "3.0.0"
 sp-core = "27.0.0"

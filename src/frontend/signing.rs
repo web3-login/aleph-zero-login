@@ -1,16 +1,19 @@
 use anyhow::anyhow;
 use futures::FutureExt;
-
 use subxt::{OnlineClient, PolkadotConfig};
-
 use subxt::ext::codec::{Decode, Encode};
 use subxt::tx::SubmittableExtrinsic;
 use subxt::tx::TxPayload;
 use subxt::utils::{AccountId32, MultiSignature};
-
-use crate::services::{extension_signature_for_partial_extrinsic, get_accounts, polkadot, Account};
+use crate::chain::Chain;
+use super::services::{extension_signature_for_partial_extrinsic, get_accounts, polkadot, Account};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
+
+#[derive(Properties, PartialEq, Clone)]
+pub struct Props {
+    pub chain: Chain,
+}
 
 pub struct SigningExamplesComponent {
     message: String,
@@ -81,7 +84,7 @@ pub enum Message {
 impl Component for SigningExamplesComponent {
     type Message = Message;
 
-    type Properties = ();
+    type Properties = Props;
 
     fn create(ctx: &Context<Self>) -> Self {
         ctx.link().send_future(OnlineClient::<PolkadotConfig>::from_url("wss://ws.test.azero.dev:443").map(|res| {
@@ -103,7 +106,7 @@ impl Component for SigningExamplesComponent {
             Message::OnlineClientCreated(online_client) => {
                 self.online_client = Some(online_client);
                 self.stage = SigningStage::EnterMessage;
-                self.set_message("Hello".into());
+                self.set_message("domain".into());
             }
             Message::ChangeMessage(message) => {
                 self.set_message(message);
@@ -257,8 +260,8 @@ impl Component for SigningExamplesComponent {
                 html!(
                     <div>
                         <div class="mb">
-                            <b>{"Message: "}</b> <br/>
-                            {&self.message}
+                            <b>{"Domain: "}</b> <br/>
+                            {&self.message} {format!(".{}", ctx.props().chain.get_tld())}
                         </div>
                         {message_as_hex_html()}
                     </div>
@@ -302,8 +305,8 @@ impl Component for SigningExamplesComponent {
 
                 html!(
                     <>
-                        <div class="mb"><b>{"Enter a message for the \"remark\" call in the \"System\" pallet:"}</b></div>
-                        <input oninput={on_input} class="mb" value={AttrValue::from(self.message.clone())}/>
+                        <div class="mb"><br/></div>
+                        <input oninput={on_input} class="mb" value={AttrValue::from(self.message.clone())}/>{ format!(".{}", ctx.props().chain.get_tld())}
                         {message_as_hex_html()}
                         <button onclick={get_accounts_click}> {"=> Select an Account for Signing"} </button>
                     </>
@@ -376,7 +379,6 @@ impl Component for SigningExamplesComponent {
 
         html! {
             <div>
-                <h1>{"Subxt Signing Example"}</h1>
                 {message_html}
                 {signer_account_html}
                 {stage_html}
