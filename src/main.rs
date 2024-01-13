@@ -1,15 +1,25 @@
 use axum::Router;
+use clap::Parser;
 use std::net::SocketAddr;
+use std::path::PathBuf;
 use tower_http::{services::ServeDir, trace::TraceLayer};
+
+#[derive(Parser, Debug)]
+struct Opt {
+    #[clap(short, long)]
+    dir: PathBuf,
+}
 
 #[tokio::main]
 async fn main() {
     pretty_env_logger::init();
 
-    serve(serve_dir("/", "static"), 8080).await;
+    let opts = Opt::parse();
+
+    serve(serve_dir("/", opts.dir), 8080).await;
 }
 
-fn serve_dir(path: &str, dir: &str) -> Router {
+fn serve_dir(path: &str, dir: PathBuf) -> Router {
     Router::new().nest_service(path, ServeDir::new(dir))
 }
 
