@@ -1,12 +1,12 @@
+use super::services::{extension_signature_for_partial_extrinsic, get_accounts, polkadot, Account};
+use crate::chain::Chain;
 use anyhow::anyhow;
 use futures::FutureExt;
-use subxt::{OnlineClient, PolkadotConfig};
 use subxt::ext::codec::{Decode, Encode};
 use subxt::tx::SubmittableExtrinsic;
 use subxt::tx::TxPayload;
 use subxt::utils::{AccountId32, MultiSignature};
-use crate::chain::Chain;
-use super::services::{extension_signature_for_partial_extrinsic, get_accounts, polkadot, Account};
+use subxt::{OnlineClient, PolkadotConfig};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
@@ -87,7 +87,8 @@ impl Component for SigningExamplesComponent {
     type Properties = Props;
 
     fn create(ctx: &Context<Self>) -> Self {
-        ctx.link().send_future(OnlineClient::<PolkadotConfig>::from_url("wss://ws.test.azero.dev:443").map(|res| {
+        let url: String = ctx.props().chain.get_url().to_string();
+        ctx.link().send_future(OnlineClient::<PolkadotConfig>::from_url(url.clone()).map(|res| {
             match res {
                 Ok(online_client) => Message::OnlineClientCreated(online_client),
                 Err(err) => Message::Error(anyhow!("Online Client could not be created. Make sure you have a local node running:\n{err}")),
@@ -99,6 +100,17 @@ impl Component for SigningExamplesComponent {
             online_client: None,
             remark_call_bytes: vec![],
         }
+    }
+
+    fn changed(&mut self, ctx: &Context<Self>, _old_props: &Self::Properties) -> bool {
+        let url: String = ctx.props().chain.get_url().to_string();
+        ctx.link().send_future(OnlineClient::<PolkadotConfig>::from_url(url.clone()).map(|res| {
+            match res {
+                Ok(online_client) => Message::OnlineClientCreated(online_client),
+                Err(err) => Message::Error(anyhow!("Online Client could not be created. Make sure you have a local node running:\n{err}")),
+            }
+        }));
+        true
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
