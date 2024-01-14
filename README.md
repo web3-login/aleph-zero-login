@@ -29,3 +29,9 @@ ink-wrapper -m assets/tzero_router_metadata.json | rustfmt --edition 2021 > src/
 cargo install subxt-cli
 subxt metadata --output-file azero-testnet-metadata.scale --url wss://ws.test.azero.dev:443
 ```
+
+### Generate Keys
+
+```sh
+openssl genpkey -algorithm ed25519 -out assets/do_not_use.pem
+```
