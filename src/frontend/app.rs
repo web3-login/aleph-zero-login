@@ -16,11 +16,18 @@ pub fn app() -> Html {
 
     html! {
         <>
-        <h1>{ "Log in with your Azero.ID" }</h1>
-        <p>{ "This is a demo of the Azero.ID login system." }</p>
-        <p>{ "To log in, you need to have an Azero.ID token." }</p>
-        <ChainSelect on_select={on_chain_select} />
-        <SigningExamplesComponent chain={(*selected_chain).clone()} />
+        <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
+            <h1>{ "Log in with your Azero.ID" }</h1>
+        </div>
+        <div class="row card justify-content-center d-grid gap-3">
+            <p>{ "This is a demo of the Azero.ID login system." }</p>
+            <p>
+                { "To log in, you need to have an " }
+                <ChainSelect on_select={on_chain_select} />
+                { " token." }
+            </p>
+            <SigningExamplesComponent chain={(*selected_chain).clone()} />
+        </div>
         <Footer />
         </>
     }
