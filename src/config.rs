@@ -1,6 +1,7 @@
 use serde::Deserialize;
 use std::fs::File;
 use std::io::Read;
+use std::path::PathBuf;
 
 #[derive(Debug, Default, PartialEq, Deserialize)]
 pub struct Config {
@@ -8,6 +9,8 @@ pub struct Config {
     pub frontend_host: String,
     pub key_id: String,
     pub eddsa_pem: Option<String>,
+    pub port: u16,
+    pub frontend_dir: PathBuf,
 }
 
 pub fn load_config(file_path: &str) -> Result<Config, Box<dyn std::error::Error>> {
@@ -34,6 +37,8 @@ ext_hostname: https://oidc.web3-login.example.com
 frontend_host: https://web3-login.example.com
 key_id: changeme
 eddsa_pem: assets/do_not_use.pem
+port: 8080
+frontend_dir: dist/
 "#
         )
         .unwrap();
@@ -48,6 +53,8 @@ eddsa_pem: assets/do_not_use.pem
                 frontend_host: "https://web3-login.example.com".to_string(),
                 key_id: "changeme".to_string(),
                 eddsa_pem: Some("assets/do_not_use.pem".to_string()),
+                port: 8080,
+                frontend_dir: "dist/".into(),
             }
         );
     }

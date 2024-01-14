@@ -2,3 +2,5 @@ ext_hostname: https://oidc.web3-login.example.com
 frontend_host: https://web3-login.example.com
 key_id: changeme,
 eddsa_pem: assets/do_not_use.pem
+port: 8080
+frontend_dir: dist/

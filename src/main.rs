@@ -1,4 +1,4 @@
-mod chain;
+use aleph_zero_login::config::load_config;
 
 use axum::Router;
 use clap::Parser;
@@ -7,9 +7,22 @@ use std::path::PathBuf;
 use tower_http::{services::ServeDir, trace::TraceLayer};
 
 #[derive(Parser, Debug)]
+#[command(name = "aleph-zero-login")]
 struct Opt {
-    #[clap(short, long)]
-    dir: PathBuf,
+    /// Sets a custom config file. If not specified, 'config.yml' is used as the default.
+    #[structopt(
+        short,
+        long,
+        default_value = "config.yml",
+        help = "Specify the path to the configuration file"
+    )]
+    config: String,
+
+    #[structopt(short, long, help = "Specify the path to the frontend directory")]
+    dir: Option<PathBuf>,
+
+    #[structopt(short, long, help = "Specify the port to listen on")]
+    port: Option<u16>,
 }
 
 #[tokio::main]
@@ -18,7 +31,19 @@ async fn main() {
 
     let opts = Opt::parse();
 
-    serve(serve_dir("/", opts.dir), 8080).await;
+    let mut config = load_config(&opts.config).unwrap();
+
+    if let Some(port) = opts.port {
+        config.port = port;
+    }
+
+    if let Some(dir) = opts.dir {
+        config.frontend_dir = dir;
+    }
+
+    log::info!("config: {:?}", config);
+
+    serve(serve_dir("/", config.frontend_dir), config.port).await;
 }
 
 fn serve_dir(path: &str, dir: PathBuf) -> Router {
