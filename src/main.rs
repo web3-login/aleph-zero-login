@@ -1,4 +1,6 @@
 use aleph_zero_login::config::load_config;
+use aleph_zero_login::server::create_server;
+use web3_login::{config::load_yml_config, server::router};
 
 use axum::Router;
 use clap::Parser;
@@ -43,7 +45,14 @@ async fn main() {
 
     log::info!("config: {:?}", config);
 
-    serve(serve_dir("/", config.frontend_dir), config.port).await;
+    let web3_login_config = load_yml_config(opts.config.into());
+
+    let server = create_server(web3_login_config);
+    let app = router(server).unwrap();
+
+    let frontend = serve_dir("/", config.frontend_dir);
+
+    serve(app, config.port).await;
 }
 
 fn serve_dir(path: &str, dir: PathBuf) -> Router {
