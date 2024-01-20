@@ -1,4 +1,4 @@
-use crate::nft_authorize::NFTAuthorize;
+use super::nft_authorize::NFTAuthorize;
 use futures::executor::block_on;
 use openidconnect::TokenResponse;
 use openidconnect::{AccessToken, AuthorizationCode};

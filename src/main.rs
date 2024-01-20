@@ -1,12 +1,14 @@
-use aleph_zero_login::config::load_config;
-use aleph_zero_login::server::create_server;
-use web3_login::{config::load_yml_config, server::router};
-
+use aleph_zero_login::backend::config::load_config;
+use aleph_zero_login::backend::server::create_server;
+use aleph_zero_login::backend::server::router;
 use axum::Router;
 use clap::Parser;
-use std::net::SocketAddr;
+use std::net::Ipv4Addr;
+use std::net::SocketAddrV4;
 use std::path::PathBuf;
-use tower_http::{services::ServeDir, trace::TraceLayer};
+use tokio::net::TcpListener;
+use tower_http::services::ServeDir;
+use web3_login::config::load_yml_config;
 
 #[derive(Parser, Debug)]
 #[command(name = "aleph-zero-login")]
@@ -52,6 +54,9 @@ async fn main() {
 
     let frontend = serve_dir("/", config.frontend_dir);
 
+    let app = app
+        .nest("/dist", frontend.clone())
+        .fallback_service(frontend.clone());
     serve(app, config.port).await;
 }
 
@@ -60,10 +65,10 @@ fn serve_dir(path: &str, dir: PathBuf) -> Router {
 }
 
 async fn serve(app: Router, port: u16) {
-    let addr = SocketAddr::from(([127, 0, 0, 1], port));
-    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
-    log::info!("listening on {}", listener.local_addr().unwrap());
-    axum::serve(listener, app.layer(TraceLayer::new_for_http()))
+    let addr_v4 = SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, port);
+    log::info!("Listening on {}", addr_v4);
+    let listener = TcpListener::bind(addr_v4).await.unwrap();
+    axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
 }

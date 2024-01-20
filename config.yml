@@ -3,8 +3,8 @@ node_provider:
   default: "https://kovan.infura.io/v3/43"
 chain_id:
   default: 42
-ext_hostname: "https://oidc.web3-login.example.com"
-frontend_host: "https://web3-login.example.com"
+ext_hostname: "http://localhost:8080"
+frontend_host: "http://localhost:8080"
 eddsa_pem: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIOKlIljKAZAW2V8x4Vq+Xc9k6IVQplhg1nyeoaj245Zp\n-----END PRIVATE KEY-----"
 port: 8080
 frontend_dir: dist/

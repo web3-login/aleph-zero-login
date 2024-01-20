@@ -6,9 +6,9 @@ use hex::FromHex;
 use sp_core::sr25519::{Public as Sr25519Public, Signature as Sr25519Signature};
 use sp_core::{crypto::AccountId32, Pair};
 
-use crate::azero::get_owner as get_azero_owner;
+use super::azero::get_owner as get_azero_owner;
+use super::tzero::get_owner as get_tzero_owner;
 use crate::chain::Chain;
-use crate::tzero::get_owner as get_tzero_owner;
 
 #[derive(Default)]
 pub struct AzeroId {}

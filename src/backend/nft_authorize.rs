@@ -1,5 +1,5 @@
-use crate::azero;
-use crate::azero_id::AzeroId;
+use super::azero;
+use super::azero_id::AzeroId;
 use crate::chain;
 use async_trait::async_trait;
 use web3_login::authorize::Authorize;
@@ -9,7 +9,7 @@ use web3_login::signature_validator::SignatureValidator;
 use web3_login::web3::is_nft_owner_of;
 use web3_login::web3::validate_signature;
 
-use crate::azero_id;
+use super::azero_id;
 
 pub struct NFTAuthorize {
     pub account: Option<String>,

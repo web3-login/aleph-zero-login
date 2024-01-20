@@ -1,9 +1,6 @@
-pub mod authorize_impl;
-pub mod azero;
-pub mod azero_id;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod backend;
+
 pub mod chain;
-pub mod config;
+
 pub mod frontend;
-pub mod nft_authorize;
-pub mod server;
-pub mod tzero;

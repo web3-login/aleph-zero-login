@@ -1,4 +1,4 @@
-#![cfg(target_arch = "wasm32")]
+//#![cfg(target_arch = "wasm32")]
 
 use anyhow::anyhow;
 use js_sys::Promise;

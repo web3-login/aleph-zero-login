@@ -27,9 +27,11 @@ pub fn model_selection(props: &Props) -> Html {
     };
 
     html! {
-        <select onchange={on_change}>
-            <option value="Azero" selected=true>{ "Azero" }</option>
-            <option value="AzeroTest">{ "AzeroTest" }</option>
-        </select>
+        <>
+            <select onchange={on_change}>
+                <option value="Azero" selected=true>{ "Azero" }</option>
+                <option value="AzeroTest">{ "AzeroTest" }</option>
+            </select>
+        </>
     }
 }

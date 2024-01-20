@@ -135,7 +135,7 @@ dependencies = [
  "tower",
  "tower-http",
  "url",
- "uuid 1.7.0",
+ "uuid",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "wasm-logger",
@@ -7011,16 +7011,6 @@ checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
 
 [[package]]
 name = "uuid"
-version = "0.8.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
-dependencies = [
- "getrandom 0.2.12",
- "serde",
-]
-
-[[package]]
-name = "uuid"
 version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f00cc9702ca12d3c81455259621e676d0f7251cec66a21e98fe2e9a37db93b2a"
@@ -7428,8 +7418,8 @@ dependencies = [
 
 [[package]]
 name = "web3-login"
-version = "0.3.1"
-source = "git+https://github.com/web3-login/web3-login#9461f92b85f8df7c1ba34107de222b219390166f"
+version = "0.3.2"
+source = "git+https://github.com/web3-login/web3-login#e7b4aa6668b71194ef0f5507f076d1b06430d554"
 dependencies = [
  "async-trait",
  "axum",
@@ -7447,7 +7437,7 @@ dependencies = [
  "tower",
  "tower-http",
  "url",
- "uuid 0.8.2",
+ "uuid",
  "web3",
 ]
 

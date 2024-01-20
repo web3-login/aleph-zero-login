@@ -35,7 +35,6 @@ subxt-signer = { version = "0.31", features = ["subxt"] }
 yew = { version = "0.21" }
 yew-router = "0.18"
 
-[target.'cfg(target_arch = "wasm32")'.dependencies]
 js-sys = "0.3"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"

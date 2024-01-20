@@ -5,7 +5,7 @@ OpenId Connect server for Azero ID.
 
 ```sh
 cargo build
-cargo run
+cargo run --features=ssr --bin server
 ```
 
 ## Test
@@ -34,4 +34,11 @@ subxt metadata --output-file azero-testnet-metadata.scale --url wss://ws.test.az
 
 ```sh
 openssl genpkey -algorithm ed25519 -out assets/do_not_use.pem
+```
+
+
+### Build frontend
+
+```sh
+trunk build --features=hydration --release --public-url /dist/
 ```
