@@ -1,9 +1,11 @@
-use super::services::{extension_signature_for_partial_extrinsic, get_accounts, polkadot, Account, sign_nonce};
+use super::services::{
+    extension_signature_for_partial_extrinsic, get_accounts, polkadot, sign_nonce, Account,
+};
 use super::signature::Signature;
 use crate::chain::Chain;
 use anyhow::anyhow;
 use futures::FutureExt;
-use subxt::ext::codec::{Decode, Encode};
+use subxt::ext::codec::Encode;
 use subxt::tx::SubmittableExtrinsic;
 use subxt::tx::TxPayload;
 use subxt::utils::{AccountId32, MultiSignature};
@@ -26,8 +28,6 @@ pub struct SigningExamplesComponent {
 }
 
 impl SigningExamplesComponent {
-    /// # Panics
-    /// panics if self.online_client is None.
     fn set_message(&mut self, message: String) {
         let remark_call = polkadot::tx().system().remark(message.as_bytes().to_vec());
         let online_client = self.online_client.as_ref().unwrap();
@@ -73,9 +73,7 @@ pub enum Message {
     ReceivedAccounts(Vec<Account>),
     /// usize represents account index in Vec<Account>
     SignWithAccount(usize),
-    ReceivedSignature(
-        Vec<u8>,
-    ),
+    ReceivedSignature(Vec<u8>),
     SubmitSigned,
     ExtrinsicFinalized {
         remark_event: polkadot::system::events::ExtrinsicSuccess,
@@ -151,13 +149,8 @@ impl Component for SigningExamplesComponent {
                     let nonce = ctx.props().nonce.to_string();
 
                     ctx.link().send_future(async move {
-                        
-                        let Ok(signature) = sign_nonce(
-                            account_source,
-                            account_address,
-                            nonce.clone(),
-                        )
-                        .await
+                        let Ok(signature) =
+                            sign_nonce(account_source, account_address, nonce.clone()).await
                         else {
                             return Message::Error(anyhow!("Signing via extension failed"));
                         };
@@ -167,10 +160,13 @@ impl Component for SigningExamplesComponent {
             }
             Message::ReceivedSignature(signature) => {
                 if let SigningStage::Signing(account) = &self.stage {
-                    
                     ctx.props().on_signed.emit(Signature {
                         account: account.address.clone(),
-                        signature: format!("0x{}", hex::encode(signature.encode())[4..].to_string()),
+                        domain: format!("{}.{}", self.message, ctx.props().chain.get_tld()),
+                        signature: format!(
+                            "0x{}",
+                            hex::encode(signature.encode())[4..].to_string()
+                        ),
                     });
                 }
             }

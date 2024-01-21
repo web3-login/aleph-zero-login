@@ -42,10 +42,11 @@ impl AuthorizeImpl {
     }
 }
 
+#[async_trait::async_trait]
 impl AuthorizeTrait for AuthorizeImpl {
-    fn authorize(
+    async fn authorize(
         &self,
-        #[allow(unused_variables)] auth_scope: AuthScope,
+        auth_scope: AuthScope,
         realm: Option<String>,
         client_id: String,
         redirect_uri: String,
@@ -58,7 +59,7 @@ impl AuthorizeTrait for AuthorizeImpl {
         chain_id: Option<String>,
         contract: Option<String>,
     ) -> Result<AuthorizeOutcome, Box<dyn std::error::Error>> {
-        block_on(self.authorize_nft(
+        self.authorize_nft(
             realm.unwrap_or_else(|| "default".into()),
             client_id,
             redirect_uri,
@@ -70,7 +71,8 @@ impl AuthorizeTrait for AuthorizeImpl {
             signature,
             chain_id,
             contract,
-        ))
+        )
+        .await
     }
 }
 
@@ -247,5 +249,73 @@ impl AuthorizeImpl {
         };
 
         Ok(AuthorizeOutcome::RedirectNeeded(redirect_uri.to_string()))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn test_authorize() {
+        let nonce = "random";
+        //let nonce = format!("<Bytes>{}</Bytes>", nonce);
+        let signature = "0xead14bb8f93083c90d6a219b6a95a6f87e317fa0c680f7d30163935c229ceb5becf3610be148d9b0de2bfd9eb42c46bcfce78e1f24682cf0fc22a07cb7c55b8f";
+        let account = "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty";
+
+        let config = Config::default();
+        let claims: ClaimsMutex = ClaimsMutex {
+            standard_claims: Arc::new(Mutex::new(HashMap::new())),
+            additional_claims: Arc::new(Mutex::new(HashMap::new())),
+        };
+
+        let tokens: Tokens = Tokens {
+            muted: Arc::new(Mutex::new(HashMap::new())),
+            bearer: Arc::new(Mutex::new(HashMap::new())),
+        };
+
+        let authorize = AuthorizeImpl::new(config, claims, tokens);
+
+        let outcome = authorize
+            .authorize(
+                AuthScope::Account,
+                Some("AzeroTest".into()),
+                "client_id".into(),
+                "http://localhost:3000".into(),
+                Some("state".into()),
+                Some("code".into()),
+                Some("query".into()),
+                Some(nonce.into()),
+                Some(account.into()),
+                Some(signature.into()),
+                Some("chain_id".into()),
+                Some("contract".into()),
+            )
+            .await;
+
+        assert_eq!(outcome.is_ok(), true);
+
+        let outcome = outcome.unwrap();
+
+        match outcome {
+            AuthorizeOutcome::RedirectNeeded(url) => {
+                assert_eq!(url.contains("http://localhost:3000"), true);
+                assert_eq!(url.contains("state=state"), true);
+                assert_eq!(url.contains("nonce=nonce"), true);
+                assert_eq!(url.contains("response_type=code"), true);
+                assert_eq!(url.contains("response_mode=query"), true);
+                assert_eq!(
+                    url.contains("redirect_uri=http%3A%2F%2Flocalhost%3A3000"),
+                    true
+                );
+                assert_eq!(url.contains("realm=default"), true);
+                assert_eq!(url.contains("chain_id=chain_id"), true);
+                assert_eq!(url.contains("contract=contract"), true);
+            }
+            AuthorizeOutcome::Denied(message) => panic!("should not be denied: {}", message),
+            AuthorizeOutcome::Error(err) => assert_eq!(err, "account%20missing"),
+            AuthorizeOutcome::Success(_) => assert_eq!(true, false),
+        }
     }
 }

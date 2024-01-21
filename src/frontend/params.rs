@@ -12,6 +12,7 @@ pub struct Params {
     pub realm: Option<String>,
     pub signature: Option<String>,
     pub account: Option<String>,
+    pub contract: Option<String>,
 }
 
 impl Default for Params {
@@ -26,6 +27,7 @@ impl Default for Params {
             client_id: Some("none".to_string()),
             signature: None,
             account: None,
+            contract: None,
         }
     }
 }
@@ -34,6 +36,7 @@ impl Params {
     pub fn merge_signature(&mut self, signature: &Signature) {
         self.account = Some(signature.account.clone());
         self.signature = Some(signature.signature.clone());
+        self.state = Some(signature.domain.clone());
     }
 
     pub fn merge_realm(&mut self, realm: &str) {
@@ -68,6 +71,9 @@ impl Params {
         }
         if self.account.is_none() {
             self.account = default.account;
+        }
+        if self.contract.is_none() {
+            self.contract = default.contract;
         }
     }
 }

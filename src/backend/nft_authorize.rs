@@ -29,11 +29,11 @@ impl NFTAuthorize {
         let signature = self.get_signature().as_ref().unwrap().to_string();
         let contract = self.contract.clone();
 
-        let chain = chain::Chain::Azero.to_string();
+        let chain = self.realm.clone();
         let nft = self.nft.clone();
 
         let azero_id = AzeroId::new();
-        match azero_id.is_nft_owner(contract, account, nft, chain) {
+        match azero_id.is_nft_owner(contract, account, nft, chain).await {
             Ok(true) => Ok(()),
             Ok(false) => Err(AuthorizeError::NFTError),
             Err(e) => Err(AuthorizeError::NFTError),

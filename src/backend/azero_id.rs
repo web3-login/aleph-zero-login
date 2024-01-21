@@ -10,6 +10,7 @@ use super::azero::get_owner as get_azero_owner;
 use super::tzero::get_owner as get_tzero_owner;
 use crate::chain::Chain;
 use crate::frontend::signature;
+use futures::executor::block_on;
 
 #[derive(Default)]
 pub struct AzeroId {}
@@ -49,8 +50,8 @@ impl SignatureValidator for AzeroId {
     }
 }
 
-impl NFTOwner for AzeroId {
-    fn is_nft_owner(
+impl AzeroId {
+    pub async fn is_nft_owner(
         &self,
         _contract: String,
         account: String,
@@ -58,10 +59,8 @@ impl NFTOwner for AzeroId {
         chain: String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let chain = Chain::from_str(&chain)?;
-        let rt = tokio::runtime::Runtime::new()?;
-
         match nft {
-            Some(nft) => return Ok(rt.block_on(Self::is_nft_owner_of(&chain, account, nft))?),
+            Some(nft) => return Ok(Self::is_nft_owner_of(&chain, account, nft).await?),
             None => Ok(false),
         }
     }
@@ -73,6 +72,12 @@ impl AzeroId {
         account: String,
         domain: String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        log::debug!(
+            "is_nft_owner_of on chain {}: {} {}",
+            chain.to_string(),
+            account,
+            domain
+        );
         match chain {
             Chain::Azero => match get_azero_owner(domain).await {
                 Ok(owner) => Ok(owner == account),
