@@ -1,4 +1,4 @@
-use super::services::{extension_signature_for_partial_extrinsic, get_accounts, polkadot, Account};
+use super::services::{extension_signature_for_partial_extrinsic, get_accounts, polkadot, Account, sign_nonce};
 use super::signature::Signature;
 use crate::chain::Chain;
 use anyhow::anyhow;
@@ -74,8 +74,7 @@ pub enum Message {
     /// usize represents account index in Vec<Account>
     SignWithAccount(usize),
     ReceivedSignature(
-        MultiSignature,
-        SubmittableExtrinsic<PolkadotConfig, OnlineClient<PolkadotConfig>>,
+        Vec<u8>,
     ),
     SubmitSigned,
     ExtrinsicFinalized {
@@ -151,29 +150,9 @@ impl Component for SigningExamplesComponent {
                     self.stage = SigningStage::Signing(account.clone());
                     let nonce = ctx.props().nonce.to_string();
 
-                    let remark_call = polkadot::tx().system().remark(nonce.as_bytes().to_vec());
-
-                    let api = self.online_client.as_ref().unwrap().clone();
-
                     ctx.link().send_future(async move {
-                        let partial_extrinsic = match api
-                            .tx()
-                            .create_partial_signed(&remark_call, &account_id, Default::default())
-                            .await
-                        {
-                            Ok(partial_extrinsic) => partial_extrinsic,
-                            Err(err) => {
-                                return Message::Error(anyhow!(
-                                    "could not create partial extrinsic:\n{:?}",
-                                    err
-                                ));
-                            }
-                        };
-
-                        let Ok(signature) = extension_signature_for_partial_extrinsic(
-                            &partial_extrinsic,
-                            &api,
-                            &account_id,
+                        
+                        let Ok(signature) = sign_nonce(
                             account_source,
                             account_address,
                             nonce.clone(),
@@ -182,38 +161,17 @@ impl Component for SigningExamplesComponent {
                         else {
                             return Message::Error(anyhow!("Signing via extension failed"));
                         };
-
-                        let Ok(multi_signature) = MultiSignature::decode(&mut &signature[..])
-                        else {
-                            return Message::Error(anyhow!("MultiSignature Decoding"));
-                        };
-
-                        let signed_extrinsic = partial_extrinsic
-                            .sign_with_address_and_signature(&account_id.into(), &multi_signature);
-
-                        // do a dry run (to debug in the js console if the extrinsic would work)
-                        let dry_res = signed_extrinsic.dry_run(None).await;
-                        web_sys::console::log_1(&format!("Dry Run Result: {:?}", dry_res).into());
-
-                        // return the signature and signed extrinsic
-                        Message::ReceivedSignature(multi_signature, signed_extrinsic)
+                        Message::ReceivedSignature(signature)
                     });
                 }
             }
-            Message::ReceivedSignature(signature, signed_extrinsic) => {
+            Message::ReceivedSignature(signature) => {
                 if let SigningStage::Signing(account) = &self.stage {
-                    let signed_extrinsic_hex =
-                        format!("0x{}", hex::encode(signed_extrinsic.encoded()));
+                    
                     ctx.props().on_signed.emit(Signature {
                         account: account.address.clone(),
-                        signature: hex::encode(signature.encode()),
+                        signature: format!("0x{}", hex::encode(signature.encode())[4..].to_string()),
                     });
-                    self.stage = SigningStage::SigningSuccess {
-                        signer_account: account.clone(),
-                        signature,
-                        signed_extrinsic_hex,
-                        submitting_stage: SubmittingStage::Initial { signed_extrinsic },
-                    }
                 }
             }
             Message::SubmitSigned => {

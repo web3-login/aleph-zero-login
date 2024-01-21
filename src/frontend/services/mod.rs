@@ -20,6 +20,8 @@ extern "C" {
     pub fn js_get_accounts() -> Promise;
     #[wasm_bindgen(js_name = signPayload)]
     pub fn js_sign_payload(payload: String, source: String, address: String) -> Promise;
+    #[wasm_bindgen(js_name = signRaw)]
+    pub fn js_sign_raw(data: String, source: String, address: String) -> Promise;
 }
 
 /// DTO to communicate with JavaScript
@@ -79,7 +81,7 @@ pub async fn extension_signature_for_partial_extrinsic(
     let era = encode_to_hex(&subxt::config::extrinsic_params::Era::Immortal);
     let genesis_hash = encode_to_hex(&api.genesis_hash());
     let method = to_hex(partial_extrinsic.call_data());
-    let nonce = api.tx().account_nonce(account_id).await?;
+    //let nonce = api.tx().account_nonce(account_id).await?;
     //let nonce = encode_to_hex_reverse(&nonce);
     let signed_extensions: Vec<String> = api
         .metadata()
@@ -106,6 +108,7 @@ pub async fn extension_signature_for_partial_extrinsic(
     });
 
     let payload = payload.to_string();
+
     let result = JsFuture::from(js_sign_payload(payload, account_source, account_address))
         .await
         .map_err(|js_err| anyhow!("{js_err:?}"))?;
@@ -121,13 +124,14 @@ pub async fn sign_nonce(
     account_address: String,
     nonce: String,
 ) -> Result<Vec<u8>, anyhow::Error> {
-    let payload = nonce.to_string();
-    let result = JsFuture::from(js_sign_payload(payload, account_source, account_address))
+    let data = nonce.to_string();
+    let result = JsFuture::from(js_sign_raw(data, account_source, account_address))
         .await
         .map_err(|js_err| anyhow!("{js_err:?}"))?;
     let signature = result
         .as_string()
         .ok_or(anyhow!("Error converting JsValue into String"))?;
     let signature = hex::decode(&signature[2..])?;
+    log::debug!("signature: {:?}", signature);
     Ok(signature)
 }

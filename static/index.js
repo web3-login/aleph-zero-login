@@ -44,47 +44,26 @@ async function getAccounts() {
 }
 
 /**
- * Signs a payload via browser extension
- *
- * @param payloadAsStr a string representing a JSON object like this:
- * let payload = {
- *     "specVersion": "0x000024d6",
- *     "transactionVersion": "0x00000018",
- *     "address": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
- *     "blockHash": "0xd7aad6185db012b7ffbce710b55234d6c9589170566b925ee50cfa3d7f1e6f8f",
- *     "blockNumber": "0x00000000",
- *     "era": "0x0000",
- *     "genesisHash": "0xd7aad6185db012b7ffbce710b55234d6c9589170566b925ee50cfa3d7f1e6f8f",
- *     "method": "0x0503001cbd2d43530a44705ad088af313e18f80b53ef16b36177cd4b77b846f2a5f07c0b00c465f14670",
- *     "nonce": "0x00000000",
- *     "signedExtensions": [
- *         "CheckNonZeroSender",
- *         "CheckSpecVersion",
- *         "CheckTxVersion",
- *         "CheckGenesis",
- *         "CheckMortality",
- *         "CheckNonce",
- *         "CheckWeight",
- *         "ChargeTransactionPayment",
- *         "PrevalidateAttests"
- *     ],
- *     "tip": "0x00000000000000000000000000000000",
- *     "version": 4
- * };
- * @param source the extension used for signing as a string
- * @param address the ss58 encoded address as a string
- * @returns {Promise<*>}
+ * Signs a payload using the Polkadot.js extension.
+ * @param dataAsStr the payload to be signed, as a string
+ * @param source the source of the account to sign with, e.g. "polkadot-js"
+ * @param address the address of the account to sign with
+ * @returns a json string that contains the signature
  */
-async function signPayload(payloadAsStr, source, address) {
-    let payload = JSON.parse(payloadAsStr);
+async function signRaw(dataAsStr, source, address) {
     const extensionMod = await getPolkadotJsExtensionMod();
     const injector = await extensionMod.web3FromSource(source);
-    const signPayload = injector?.signer?.signPayload;
-    if (!!signPayload) {
-        const {signature} = await signPayload(payload);
-        console.log("signature js:", signature)
+    const signRaw = injector?.signer?.signRaw;
+    if (!!signRaw) {
+        const {signature} = await signRaw({
+            address,
+            data: dataAsStr,
+            type: "bytes"
+        });
+        console.log("data is:", dataAsStr)
+        console.log("signature is:", signature)
         return signature;
     } else {
-        throw "The extension's injector does not have a `signPayload` function on its `signer`";
+        throw "The extension's injector does not have a `signRaw` function on its `signer`";
     }
 }
