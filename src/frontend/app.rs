@@ -1,34 +1,13 @@
 use yew::prelude::*;
+use yew_router::prelude::*;
 
-use super::chain_select::ChainSelect;
-use super::footer::Footer;
-use super::signing::SigningExamplesComponent;
-use crate::chain::Chain;
+use super::routes::{switch, Route};
 
 #[function_component(App)]
 pub fn app() -> Html {
-    let selected_chain = use_state(|| Chain::Azero);
-
-    let on_chain_select = {
-        let selected_chain = selected_chain.clone();
-        Callback::from(move |chain: Chain| selected_chain.set(chain))
-    };
-
     html! {
-        <>
-        <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
-            <h1>{ "Log in with your Azero.ID" }</h1>
-        </div>
-        <div class="row card justify-content-center d-grid gap-3">
-            <p>{ "This is a demo of the Azero.ID login system." }</p>
-            <p>
-                { "To log in, you need to have an " }
-                <ChainSelect on_select={on_chain_select} />
-                { " token." }
-            </p>
-            <SigningExamplesComponent chain={(*selected_chain).clone()} />
-        </div>
-        <Footer />
-        </>
+        <BrowserRouter>
+            <Switch<Route> render={switch} />
+        </BrowserRouter>
     }
 }
