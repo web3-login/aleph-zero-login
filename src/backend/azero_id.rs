@@ -9,6 +9,7 @@ use sp_core::{crypto::AccountId32, Pair};
 use super::azero::get_owner as get_azero_owner;
 use super::tzero::get_owner as get_tzero_owner;
 use crate::chain::Chain;
+use crate::frontend::signature;
 
 #[derive(Default)]
 pub struct AzeroId {}
@@ -21,6 +22,13 @@ impl AzeroId {
 
 impl SignatureValidator for AzeroId {
     fn validate_signature(&self, account: String, nonce: String, signature: String) -> bool {
+        let message = format!("<Bytes>{}</Bytes>", nonce);
+
+        println!("account: {}", account);
+        println!("nonce: {}", nonce);
+        println!("signature: {}", signature);
+        println!("message: {}", message);
+
         let account_id = match AccountId32::from_str(&account) {
             Ok(acc) => acc,
             Err(_) => return false,
@@ -37,7 +45,7 @@ impl SignatureValidator for AzeroId {
             Some(sig) => sig,
             None => return false,
         };
-        sp_core::sr25519::Pair::verify(&signature, nonce.as_bytes(), &public_key)
+        sp_core::sr25519::Pair::verify(&signature, message, &public_key)
     }
 }
 
@@ -105,7 +113,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_wront_tld() {
+    async fn test_wrong_tld() {
         let account: String = "5Esx8QLfERemJmBmhZ9aJDgBmw69vLaE6rN5FNx3VPZDY1fn".to_string();
         let domain: String = "chriamue.tzero".to_string();
 
@@ -116,9 +124,99 @@ mod tests {
 
     #[test]
     fn test_validate_signature() {
-        let nonce = "This is a text message";
-        let signature = "0x2aeaa98e26062cf65161c68c5cb7aa31ca050cb5bdd07abc80a475d2a2eebc7b7a9c9546fbdff971b29419ddd9982bf4148c81a49df550154e1674a6b58bac84";
+        let nonce = "random";
+        let nonce = format!("<Bytes>{}</Bytes>", nonce);
+
+        let signature = "0xead14bb8f93083c90d6a219b6a95a6f87e317fa0c680f7d30163935c229ceb5becf3610be148d9b0de2bfd9eb42c46bcfce78e1f24682cf0fc22a07cb7c55b8f";
         let account = "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty";
+
+        let account = account.to_string();
+        let nonce = nonce.to_string();
+        let signature = signature.to_string();
+
+        let account_id = match AccountId32::from_str(&account) {
+            Ok(acc) => acc,
+            Err(_) => panic!("Invalid account"),
+        };
+
+        let public_key = Sr25519Public::from_raw(account_id.into());
+
+        let signature_bytes = match Vec::from_hex(signature.trim_start_matches("0x")) {
+            Ok(sig) => sig,
+            Err(_) => panic!("Invalid signature"),
+        };
+
+        let signature = match Sr25519Signature::from_slice(&signature_bytes) {
+            Some(sig) => sig,
+            None => panic!("Invalid signature"),
+        };
+        let validated = sp_core::sr25519::Pair::verify(&signature, nonce, &public_key);
+        assert_eq!(validated, true);
+    }
+
+    #[test]
+    fn test_validate_signature2() {
+        use subxt_signer::{ecdsa, sr25519};
+
+        let nonce = "random";
+        let nonce = format!("<Bytes>{}</Bytes>", nonce);
+        let signature = "0xead14bb8f93083c90d6a219b6a95a6f87e317fa0c680f7d30163935c229ceb5becf3610be148d9b0de2bfd9eb42c46bcfce78e1f24682cf0fc22a07cb7c55b8f";
+        let account = "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty";
+
+        let account_id = match AccountId32::from_str(&account) {
+            Ok(acc) => acc,
+            Err(_) => panic!("Invalid account"),
+        };
+
+        let account = sr25519::PublicKey(account_id.into());
+        let signature: [u8; 64] = hex::decode(signature.trim_start_matches("0x"))
+            .unwrap()
+            .try_into()
+            .unwrap();
+        let signature = sr25519::Signature(signature);
+
+        assert!(sr25519::verify(&signature, nonce.as_bytes(), &account));
+    }
+
+    #[test]
+    fn test_validate_signature3() {
+        use sp_core::crypto::Ss58Codec;
+        use subxt_signer::sr25519;
+
+        let nonce = "random";
+        let message = format!("<Bytes>{}</Bytes>", nonce);
+        let alice = sr25519::dev::alice();
+
+        let signature = alice.sign(message.as_bytes());
+
+        assert!(sr25519::verify(
+            &signature,
+            message.as_bytes(),
+            &alice.public_key()
+        ));
+
+        let account = AccountId32::from(alice.public_key().0);
+        let account = account.to_ss58check();
+
+        let signature = hex::encode(signature.0);
+
+        let azero_id = AzeroId::new();
+        assert_eq!(
+            azero_id.validate_signature(
+                account.to_string(),
+                nonce.to_string(),
+                signature.to_string()
+            ),
+            true
+        );
+    }
+
+    #[test]
+    fn test_validate_signature4() {
+        let nonce = "random";
+        //let message = format!("<Bytes>{}</Bytes>", nonce);
+        let account = "5CAKT2tGVrvdu6b4HdQTds57nVNKi6TnjfiMyqPJQG9RQraY";
+        let signature = "01fc2ba8bb5cccd80b2cde69ee407a3f2719ae90ecd94281d9fd32513e9b763d0e17d812a9e1adb7221c40f1cabe605d28e5b09d35283a99e82a4e9987804e6886";
 
         let azero_id = AzeroId::new();
         assert_eq!(

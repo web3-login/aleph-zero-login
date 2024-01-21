@@ -89,9 +89,19 @@ impl AuthorizeImpl {
         chain_id: Option<String>,
         contract: Option<String>,
     ) -> Result<AuthorizeOutcome, Box<dyn std::error::Error>> {
+        let redirect_uri: String = urlencoding::decode(&redirect_uri)?.into();
+        log::debug!("redirect_uri: {}", redirect_uri);
+        log::debug!("realm: {}", realm);
+        log::debug!("client_id: {}", client_id);
+        log::debug!("state: {:?}", state);
+        log::debug!("response_type: {:?}", response_type);
+        log::debug!("signature: {:?}", signature);
+        log::debug!("nonce: {:?}", nonce);
+        log::debug!("account: {:?}", account);
+
         if Url::parse(&redirect_uri).is_err() {
             return Ok(AuthorizeOutcome::Error(
-                "wrong%20redirect%20uri".to_string(),
+                format!("wrong%20redirect%20uri {}", redirect_uri).to_string(),
             ));
         }
 
@@ -151,15 +161,15 @@ impl AuthorizeImpl {
             },
         };
 
-        let redirect_uri = Url::parse(&redirect_uri);
+        let parsed_redirect_uri = Url::parse(&redirect_uri);
 
-        if redirect_uri.is_err() {
+        if parsed_redirect_uri.is_err() {
             return Ok(AuthorizeOutcome::Error(
-                "wrong%20redirect%20uri".to_string(),
+                format!("wrong%20redirect%20uri {}", redirect_uri).to_string(),
             ));
         }
 
-        let mut redirect_uri = redirect_uri.unwrap();
+        let mut redirect_uri = parsed_redirect_uri.unwrap();
 
         let access_token = AccessToken::new(Uuid::new_v4().to_string());
         let code = AuthorizationCode::new(Uuid::new_v4().to_string());

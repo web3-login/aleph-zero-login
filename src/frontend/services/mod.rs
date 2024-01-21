@@ -71,6 +71,7 @@ pub async fn extension_signature_for_partial_extrinsic(
     account_id: &AccountId32,
     account_source: String,
     account_address: String,
+    nonce: String,
 ) -> Result<Vec<u8>, anyhow::Error> {
     let spec_version = encode_to_hex_reverse(&api.runtime_version().spec_version);
     let transaction_version = encode_to_hex_reverse(&api.runtime_version().transaction_version);
@@ -79,7 +80,7 @@ pub async fn extension_signature_for_partial_extrinsic(
     let genesis_hash = encode_to_hex(&api.genesis_hash());
     let method = to_hex(partial_extrinsic.call_data());
     let nonce = api.tx().account_nonce(account_id).await?;
-    let nonce = encode_to_hex_reverse(&nonce);
+    //let nonce = encode_to_hex_reverse(&nonce);
     let signed_extensions: Vec<String> = api
         .metadata()
         .extrinsic()
@@ -105,6 +106,22 @@ pub async fn extension_signature_for_partial_extrinsic(
     });
 
     let payload = payload.to_string();
+    let result = JsFuture::from(js_sign_payload(payload, account_source, account_address))
+        .await
+        .map_err(|js_err| anyhow!("{js_err:?}"))?;
+    let signature = result
+        .as_string()
+        .ok_or(anyhow!("Error converting JsValue into String"))?;
+    let signature = hex::decode(&signature[2..])?;
+    Ok(signature)
+}
+
+pub async fn sign_nonce(
+    account_source: String,
+    account_address: String,
+    nonce: String,
+) -> Result<Vec<u8>, anyhow::Error> {
+    let payload = nonce.to_string();
     let result = JsFuture::from(js_sign_payload(payload, account_source, account_address))
         .await
         .map_err(|js_err| anyhow!("{js_err:?}"))?;

@@ -1,18 +1,22 @@
 use yew::prelude::*;
-use yew_router::prelude::use_location;
+use yew_router::prelude::{use_location, use_navigator};
 
 use crate::chain::Chain;
 use crate::frontend::chain_select::ChainSelect;
 use crate::frontend::configuration::Configuration;
 use crate::frontend::footer::Footer;
 use crate::frontend::params::Params;
+use crate::frontend::routes::Route;
+use crate::frontend::signature::Signature;
 use crate::frontend::signing::SigningExamplesComponent;
 
 #[function_component(Home)]
 pub fn home() -> Html {
     let selected_chain = use_state(|| Chain::Azero);
+    let signature = use_state(|| Signature::default());
 
     let location = use_location().unwrap();
+    let navigator = use_navigator().unwrap();
 
     let mut params = location.query::<Params>().unwrap();
 
@@ -25,6 +29,21 @@ pub fn home() -> Html {
         Callback::from(move |chain: Chain| selected_chain.set(chain))
     };
 
+    let on_signed = {
+        let selected_chain = selected_chain.clone();
+        let params = params.clone();
+
+        Callback::from(move |signature: Signature| {
+            let mut params = params.clone();
+            params.merge_default();
+            params.merge_signature(&signature);
+            params.merge_realm(&selected_chain.to_string());
+            let _ = navigator.replace_with_query(&Route::Authorize, &params);
+        })
+    };
+
+    let nonce = params.nonce.clone().unwrap_or("random".to_string().clone());
+
     html! {
         <>
         <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
@@ -32,13 +51,15 @@ pub fn home() -> Html {
         </div>
         <div class="row card justify-content-center d-grid gap-3">
             <p>{ "This is a demo of the Azero.ID login system." }</p>
-            <Configuration  {params} />
+            <Configuration  params={params.clone()} />
             <p>
                 { "To log in, you need to have an " }
                 <ChainSelect on_select={on_chain_select} />
                 { " token." }
             </p>
-            <SigningExamplesComponent chain={(*selected_chain).clone()} />
+            <SigningExamplesComponent chain={(*selected_chain).clone()} {nonce} {on_signed} />
+            <p>{ "The signature is:" }</p>
+            <p>{ format!("{:?}", signature) }</p>
         </div>
         <Footer />
         </>

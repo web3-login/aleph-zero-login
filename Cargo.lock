@@ -135,6 +135,7 @@ dependencies = [
  "tower",
  "tower-http",
  "url",
+ "urlencoding",
  "uuid",
  "wasm-bindgen",
  "wasm-bindgen-futures",

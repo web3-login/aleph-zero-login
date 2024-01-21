@@ -5,4 +5,5 @@ pub mod footer;
 pub mod params;
 pub mod routes;
 pub mod services;
+pub mod signature;
 pub mod signing;

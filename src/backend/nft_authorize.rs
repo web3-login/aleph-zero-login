@@ -1,6 +1,7 @@
 use super::azero;
 use super::azero_id::AzeroId;
 use crate::chain;
+use crate::frontend::signature;
 use async_trait::async_trait;
 use web3_login::authorize::Authorize;
 use web3_login::authorize::AuthorizeError;

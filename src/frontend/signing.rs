@@ -1,4 +1,5 @@
 use super::services::{extension_signature_for_partial_extrinsic, get_accounts, polkadot, Account};
+use super::signature::Signature;
 use crate::chain::Chain;
 use anyhow::anyhow;
 use futures::FutureExt;
@@ -13,6 +14,8 @@ use yew::prelude::*;
 #[derive(Properties, PartialEq, Clone)]
 pub struct Props {
     pub chain: Chain,
+    pub nonce: String,
+    pub on_signed: Callback<Signature>,
 }
 
 pub struct SigningExamplesComponent {
@@ -88,14 +91,17 @@ impl Component for SigningExamplesComponent {
 
     fn create(ctx: &Context<Self>) -> Self {
         let url: String = ctx.props().chain.get_url().to_string();
+        let nonce: String = ctx.props().nonce.to_string();
+
         ctx.link().send_future(OnlineClient::<PolkadotConfig>::from_url(url.clone()).map(|res| {
             match res {
                 Ok(online_client) => Message::OnlineClientCreated(online_client),
                 Err(err) => Message::Error(anyhow!("Online Client could not be created. Make sure you have a local node running:\n{err}")),
             }
         }));
+
         SigningExamplesComponent {
-            message: "".to_string(),
+            message: nonce,
             stage: SigningStage::CreatingOnlineClient,
             online_client: None,
             remark_call_bytes: vec![],
@@ -118,7 +124,6 @@ impl Component for SigningExamplesComponent {
             Message::OnlineClientCreated(online_client) => {
                 self.online_client = Some(online_client);
                 self.stage = SigningStage::EnterMessage;
-                self.set_message("domain".into());
             }
             Message::ChangeMessage(message) => {
                 self.set_message(message);
@@ -144,10 +149,9 @@ impl Component for SigningExamplesComponent {
                     let account_id: AccountId32 = account_address.parse().unwrap();
 
                     self.stage = SigningStage::Signing(account.clone());
+                    let nonce = ctx.props().nonce.to_string();
 
-                    let remark_call = polkadot::tx()
-                        .system()
-                        .remark(self.message.as_bytes().to_vec());
+                    let remark_call = polkadot::tx().system().remark(nonce.as_bytes().to_vec());
 
                     let api = self.online_client.as_ref().unwrap().clone();
 
@@ -172,6 +176,7 @@ impl Component for SigningExamplesComponent {
                             &account_id,
                             account_source,
                             account_address,
+                            nonce.clone(),
                         )
                         .await
                         else {
@@ -199,6 +204,10 @@ impl Component for SigningExamplesComponent {
                 if let SigningStage::Signing(account) = &self.stage {
                     let signed_extrinsic_hex =
                         format!("0x{}", hex::encode(signed_extrinsic.encoded()));
+                    ctx.props().on_signed.emit(Signature {
+                        account: account.address.clone(),
+                        signature: hex::encode(signature.encode()),
+                    });
                     self.stage = SigningStage::SigningSuccess {
                         signer_account: account.clone(),
                         signature,
