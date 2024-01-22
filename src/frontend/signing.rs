@@ -1,3 +1,4 @@
+use super::components::nft_image::NftImage;
 use super::services::{
     extension_signature_for_partial_extrinsic, get_accounts, polkadot, sign_nonce, Account,
 };
@@ -355,6 +356,7 @@ impl Component for SigningExamplesComponent {
         html! {
             <div>
                 {message_html}
+                <NftImage chain={ctx.props().chain.clone()} domain={self.message.clone()} />
                 {signer_account_html}
                 {stage_html}
             </div>

@@ -3,7 +3,7 @@ OpenId Connect server for Azero ID.
 
 This is an experimental project to explore the possibilities of the [Azero ID](https://azero.id/) protocol. Do not use this in production.
 
-It is an adoption of the [NFT Login](https://github.com/nft-login/nft-login) project to the [Azero ID](https://azero.id/) NFT.
+It is an adoption of my [NFT Login](https://github.com/nft-login/nft-login) project to the [Azero ID](https://azero.id/) NFT.
 
 ## Motivation
 
@@ -30,6 +30,7 @@ Non fungible tokens are a proof for a digital ownership. This ownership can be u
 
 ```sh
 cargo build
+trunk build --features=hydration --release --public-url /dist/
 cargo run --features=ssr --bin server
 ```
 
@@ -66,4 +67,10 @@ openssl genpkey -algorithm ed25519 -out assets/do_not_use.pem
 
 ```sh
 trunk build --features=hydration --release --public-url /dist/
+```
+
+### Develop frontend
+
+```sh
+trunk serve --features=hydration
 ```

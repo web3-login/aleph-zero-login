@@ -1,5 +1,6 @@
 pub mod app;
 pub mod chain_select;
+pub mod components;
 pub mod configuration;
 pub mod footer;
 pub mod params;

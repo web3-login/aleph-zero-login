@@ -308,10 +308,7 @@ mod tests {
                 assert_eq!(url.contains("nonce="), false);
                 assert_eq!(url.contains("response_type="), false);
                 assert_eq!(url.contains("response_mode="), false);
-                assert_eq!(
-                    url.contains("redirect_uri="),
-                    false
-                );
+                assert_eq!(url.contains("redirect_uri="), false);
                 assert_eq!(url.contains("realm="), false);
                 assert_eq!(url.contains("chain_id="), false);
                 assert_eq!(url.contains("contract="), false);
