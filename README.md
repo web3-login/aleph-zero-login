@@ -1,6 +1,31 @@
 # aleph-zero-login
 OpenId Connect server for Azero ID.
 
+This is an experimental project to explore the possibilities of the [Azero ID](https://azero.id/) protocol. Do not use this in production.
+
+It is an adoption of the [NFT Login](https://github.com/nft-login/nft-login) project to the [Azero ID](https://azero.id/) NFT.
+
+## Motivation
+
+Non fungible tokens are a proof for a digital ownership. This ownership can be used to give access to any digital resource or service.
+
+## Features
+
+- [x] Azero ID
+- [x] OpenId Connect
+- [ ] OAuth2
+- [ ] SSO
+- [ ] SAML
+
+## Dependencies
+
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Axum](https://crates.io/crates/axum)
+- [Subxt](https://crates.io/crates/subxt)
+- [Yew](https://yew.rs/)
+- [Trunk](https://trunkrs.dev/)
+- [AZERO.ID](https://azero.id/)
+
 ## Quick Start
 
 ```sh
