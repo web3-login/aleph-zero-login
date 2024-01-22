@@ -260,11 +260,13 @@ mod tests {
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
     async fn test_authorize() {
         let nonce = "random";
-        //let nonce = format!("<Bytes>{}</Bytes>", nonce);
-        let signature = "0xead14bb8f93083c90d6a219b6a95a6f87e317fa0c680f7d30163935c229ceb5becf3610be148d9b0de2bfd9eb42c46bcfce78e1f24682cf0fc22a07cb7c55b8f";
-        let account = "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty";
+        let signature = "0x264fb4760958f40fc4886152f6a8e49615c7750341ce050849f7592e800f925aca43cc161c7b94250c5ecc89b8ab528132ceae69697ea85dd9822a81b58f568f";
+        let account = "5Esx8QLfERemJmBmhZ9aJDgBmw69vLaE6rN5FNx3VPZDY1fn";
+        let state = "chriamue.tzero";
 
-        let config = Config::default();
+        let mut config = Config::default();
+        config.eddsa_pem = Some("-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIGWObwgsl5OQvHbjsTxMxuhnLaAXysh/+2AKHYXXVfoK\n-----END PRIVATE KEY-----".into());
+
         let claims: ClaimsMutex = ClaimsMutex {
             standard_claims: Arc::new(Mutex::new(HashMap::new())),
             additional_claims: Arc::new(Mutex::new(HashMap::new())),
@@ -283,7 +285,7 @@ mod tests {
                 Some("AzeroTest".into()),
                 "client_id".into(),
                 "http://localhost:3000".into(),
-                Some("state".into()),
+                Some(state.into()),
                 Some("code".into()),
                 Some("query".into()),
                 Some(nonce.into()),
@@ -301,21 +303,22 @@ mod tests {
         match outcome {
             AuthorizeOutcome::RedirectNeeded(url) => {
                 assert_eq!(url.contains("http://localhost:3000"), true);
-                assert_eq!(url.contains("state=state"), true);
-                assert_eq!(url.contains("nonce=nonce"), true);
-                assert_eq!(url.contains("response_type=code"), true);
-                assert_eq!(url.contains("response_mode=query"), true);
+                assert_eq!(url.contains("state=chriamue.tzero"), true);
+                assert!(url.contains("code="));
+                assert_eq!(url.contains("nonce="), false);
+                assert_eq!(url.contains("response_type="), false);
+                assert_eq!(url.contains("response_mode="), false);
                 assert_eq!(
-                    url.contains("redirect_uri=http%3A%2F%2Flocalhost%3A3000"),
-                    true
+                    url.contains("redirect_uri="),
+                    false
                 );
-                assert_eq!(url.contains("realm=default"), true);
-                assert_eq!(url.contains("chain_id=chain_id"), true);
-                assert_eq!(url.contains("contract=contract"), true);
+                assert_eq!(url.contains("realm="), false);
+                assert_eq!(url.contains("chain_id="), false);
+                assert_eq!(url.contains("contract="), false);
             }
-            AuthorizeOutcome::Denied(message) => panic!("should not be denied: {}", message),
-            AuthorizeOutcome::Error(err) => assert_eq!(err, "account%20missing"),
-            AuthorizeOutcome::Success(_) => assert_eq!(true, false),
+            AuthorizeOutcome::Denied(message) => panic!("should not denied: {}", message),
+            AuthorizeOutcome::Error(err) => panic!("should not error: {}", err),
+            AuthorizeOutcome::Success(_) => panic!("should not success"),
         }
     }
 }

@@ -38,12 +38,8 @@ pub fn home() -> Html {
             params.merge_default();
             params.merge_signature(&signature);
             params.merge_realm(&selected_chain.to_string());
-            let url = format!(
-                "{}?{}",
-                "/authorize",
-                serde_qs::to_string(&params).unwrap()
-            );
-    
+            let url = format!("{}?{}", "/authorize", serde_qs::to_string(&params).unwrap());
+
             // Use web_sys to navigate to the new URL
             let window = web_sys::window().unwrap();
             let location = window.location();

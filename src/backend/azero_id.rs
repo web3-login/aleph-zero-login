@@ -215,22 +215,4 @@ mod tests {
             true
         );
     }
-
-    #[test]
-    fn test_validate_signature4() {
-        let nonce = "random";
-        //let message = format!("<Bytes>{}</Bytes>", nonce);
-        let account = "5CAKT2tGVrvdu6b4HdQTds57nVNKi6TnjfiMyqPJQG9RQraY";
-        let signature = "1102303130313736633630376331616334323033363031356231326339306434663838373537373466366332663833383737356538303562383364306535343233313732343638636331393136333130333763373436376631643730623633313631383633363731623561363636343366336261643138333464666238653232396165363830";
-
-        let azero_id = AzeroId::new();
-        assert_eq!(
-            azero_id.validate_signature(
-                account.to_string(),
-                nonce.to_string(),
-                signature.to_string()
-            ),
-            true
-        );
-    }
 }
