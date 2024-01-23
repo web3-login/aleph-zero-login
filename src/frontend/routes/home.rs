@@ -3,13 +3,13 @@ use yew_router::prelude::{use_location, use_navigator};
 
 use crate::chain::Chain;
 use crate::frontend::chain_select::ChainSelect;
+use crate::frontend::components::navigation::Navigation;
 use crate::frontend::footer::Footer;
 use crate::frontend::login_url::LoginUrl;
 use crate::frontend::params::Params;
 use crate::frontend::routes::Route;
 use crate::frontend::signature::Signature;
 use crate::frontend::signing::SigningExamplesComponent;
-use crate::frontend::components::navigation::Navigation;
 
 #[function_component(Home)]
 pub fn home() -> Html {

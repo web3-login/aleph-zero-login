@@ -1,11 +1,9 @@
+use crate::frontend::routes::{switch, Route};
 use yew::prelude::*;
 use yew_router::prelude::{use_location, use_navigator};
-use crate::frontend::routes::{switch, Route};
-
 
 #[function_component(Navigation)]
 pub fn navigation() -> Html {
-
     let navigator = use_navigator().unwrap();
 
     let go_home_button = {
