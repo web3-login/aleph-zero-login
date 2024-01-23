@@ -3,12 +3,13 @@ use yew_router::prelude::{use_location, use_navigator};
 
 use crate::chain::Chain;
 use crate::frontend::chain_select::ChainSelect;
-use crate::frontend::configuration::Configuration;
 use crate::frontend::footer::Footer;
+use crate::frontend::login_url::LoginUrl;
 use crate::frontend::params::Params;
 use crate::frontend::routes::Route;
 use crate::frontend::signature::Signature;
 use crate::frontend::signing::SigningExamplesComponent;
+use crate::frontend::components::navigation::Navigation;
 
 #[function_component(Home)]
 pub fn home() -> Html {
@@ -51,12 +52,14 @@ pub fn home() -> Html {
 
     html! {
         <>
+
+        <Navigation />
         <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
             <h1>{ "Log in with your Azero.ID" }</h1>
         </div>
         <div class="row card justify-content-center d-grid gap-3">
             <p>{ "This is a demo of the Azero.ID login system." }</p>
-            <Configuration  params={params.clone()} />
+            <LoginUrl  params={params.clone()} />
             <p>
                 { "To log in, you need to have an " }
                 <ChainSelect on_select={on_chain_select} />

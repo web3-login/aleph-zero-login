@@ -1,8 +1,9 @@
 pub mod app;
 pub mod chain_select;
 pub mod components;
-pub mod configuration;
 pub mod footer;
+pub mod login_url;
+pub mod pages;
 pub mod params;
 pub mod routes;
 pub mod services;
