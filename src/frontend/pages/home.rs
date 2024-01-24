@@ -6,15 +6,19 @@ use crate::frontend::components::chain_select::ChainSelect;
 use crate::frontend::components::footer::Footer;
 use crate::frontend::components::login_url::LoginUrl;
 use crate::frontend::components::navigation::Navigation;
+use crate::frontend::components::nft_image::NftImage;
+use crate::frontend::components::nft_input::NftInput;
 use crate::frontend::params::Params;
 use crate::frontend::routes::Route;
 use crate::frontend::signature::Signature;
 use crate::frontend::signing::SigningExamplesComponent;
+use web_sys::HtmlInputElement;
 
 #[function_component(Home)]
 pub fn home() -> Html {
     let selected_chain = use_state(|| Chain::Azero);
     let signature = use_state(|| Signature::default());
+    let nft_id = use_state(|| "azero".to_string());
 
     let location = use_location().unwrap();
     let navigator = use_navigator().unwrap();
@@ -28,6 +32,11 @@ pub fn home() -> Html {
     let on_chain_select = {
         let selected_chain = selected_chain.clone();
         Callback::from(move |chain: Chain| selected_chain.set(chain))
+    };
+
+    let on_nft_id_change = {
+        let nft_id = nft_id.clone();
+        Callback::from(move |nft: String| nft_id.set(nft))
     };
 
     let on_signed = {
@@ -64,7 +73,11 @@ pub fn home() -> Html {
                 <ChainSelect on_select={on_chain_select} />
                 { " token." }
             </p>
-            <SigningExamplesComponent chain={(*selected_chain).clone()} {nonce} {on_signed} />
+
+            <NftImage chain={(*selected_chain).clone()} domain={(*nft_id).clone()} />
+            <NftInput chain={(*selected_chain).clone()} nft_id={(*nft_id).clone()} onchange={on_nft_id_change} />
+
+            <SigningExamplesComponent chain={(*selected_chain).clone()} nft_id={(*nft_id).clone()} {nonce} {on_signed} />
         </div>
         <Footer />
         </div>

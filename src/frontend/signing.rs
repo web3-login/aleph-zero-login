@@ -17,12 +17,12 @@ use yew::prelude::*;
 #[derive(Properties, PartialEq, Clone)]
 pub struct Props {
     pub chain: Chain,
+    pub nft_id: String,
     pub nonce: String,
     pub on_signed: Callback<Signature>,
 }
 
 pub struct SigningExamplesComponent {
-    message: String,
     remark_call_bytes: Vec<u8>,
     online_client: Option<OnlineClient<PolkadotConfig>>,
     stage: SigningStage,
@@ -36,7 +36,6 @@ impl SigningExamplesComponent {
             .encode_call_data(&online_client.metadata())
             .unwrap();
         self.remark_call_bytes = remark_call_bytes;
-        self.message = message;
     }
 }
 
@@ -89,7 +88,6 @@ impl Component for SigningExamplesComponent {
 
     fn create(ctx: &Context<Self>) -> Self {
         let url: String = ctx.props().chain.get_url().to_string();
-        let nonce: String = ctx.props().nonce.to_string();
 
         ctx.link().send_future(OnlineClient::<PolkadotConfig>::from_url(url.clone()).map(|res| {
             match res {
@@ -99,7 +97,6 @@ impl Component for SigningExamplesComponent {
         }));
 
         SigningExamplesComponent {
-            message: nonce,
             stage: SigningStage::CreatingOnlineClient,
             online_client: None,
             remark_call_bytes: vec![],
@@ -163,7 +160,7 @@ impl Component for SigningExamplesComponent {
                 if let SigningStage::Signing(account) = &self.stage {
                     ctx.props().on_signed.emit(Signature {
                         account: account.address.clone(),
-                        domain: format!("{}.{}", self.message, ctx.props().chain.get_tld()),
+                        domain: format!("{}.{}", ctx.props().nft_id, ctx.props().chain.get_tld()),
                         signature: format!(
                             "0x{}",
                             hex::encode(signature.encode())[4..].to_string()
@@ -216,14 +213,6 @@ impl Component for SigningExamplesComponent {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let message_as_hex_html = || {
-            html!(
-                <div class="mb">
-                    <b>{"Hex representation of \"remark\" call in \"System\" pallet:"}</b> <br/>
-                    {format!("0x{}", hex::encode(&self.remark_call_bytes))}
-                </div>
-            )
-        };
 
         let message_html: Html = match &self.stage {
             SigningStage::Error(_)
@@ -232,14 +221,13 @@ impl Component for SigningExamplesComponent {
             _ => {
                 let _remark_call = polkadot::tx()
                     .system()
-                    .remark(self.message.as_bytes().to_vec());
+                    .remark(ctx.props().nft_id.as_bytes().to_vec());
                 html!(
                     <div>
                         <div class="mb">
                             <b>{"Domain: "}</b> <br/>
-                            {&self.message} {format!(".{}", ctx.props().chain.get_tld())}
+                            {&ctx.props().nft_id} {format!(".{}", ctx.props().chain.get_tld())}
                         </div>
-                        {message_as_hex_html()}
                     </div>
                 )
             }
@@ -281,8 +269,6 @@ impl Component for SigningExamplesComponent {
                 html!(
                     <>
                         <div class="mb"><br/></div>
-                        <input oninput={on_input} class="mb" value={AttrValue::from(self.message.clone())}/>{ format!(".{}", ctx.props().chain.get_tld())}
-                        {message_as_hex_html()}
                         <button onclick={get_accounts_click}> {"=> Select an Account for Signing"} </button>
                     </>
                 )
@@ -347,7 +333,6 @@ impl Component for SigningExamplesComponent {
         html! {
             <div class="signing">
                 {message_html}
-                <NftImage chain={ctx.props().chain.clone()} domain={self.message.clone()} />
                 {signer_account_html}
                 {stage_html}
             </div>
