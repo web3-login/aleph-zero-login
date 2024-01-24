@@ -22,7 +22,7 @@ pub fn nft_input(props: &Props) -> Html {
     };
 
     html! {
-        <div class="nft-login">
+        <div class="nft-input">
         <div class="col-12">
             <div class="input-group mb-3">
                 <input type="text" placeholder="azero" oninput={on_input} /> {format!(".{}", props.chain.get_tld())}
