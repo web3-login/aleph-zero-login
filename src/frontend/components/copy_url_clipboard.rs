@@ -18,8 +18,8 @@ pub fn copy_url_clipboard(props: &Props) -> Html {
     });
 
     html! {
-        <>
-        <button id="copy-url-clipboard" {onclick} >{ "Copy URL to clipboard" }</button>
-        </>
+        <div class="copy-url-clipboard">
+        <button {onclick} >{ "Copy URL to clipboard" }</button>
+        </div>
     }
 }

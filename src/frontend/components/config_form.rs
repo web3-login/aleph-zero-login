@@ -11,7 +11,6 @@ pub struct Props {
 
 #[function_component(ConfigForm)]
 pub fn config_form(props: &Props) -> Html {
-
     let oninput = {
         let params = props.params.clone();
         let update_params = props.on_change.clone();
@@ -37,7 +36,7 @@ pub fn config_form(props: &Props) -> Html {
     };
 
     html! {
-        <>
+        <div class="config-form">
         <form>
         <div class="mb-3">
             <label for="client_id" class="form-label">{"Client ID"}</label>
@@ -80,6 +79,6 @@ pub fn config_form(props: &Props) -> Html {
             <input type="text" class="form-control" id="contract" value={props.params.contract.clone()} oninput={oninput.clone()} />
         </div>
         </form>
-        </>
+        </div>
     }
 }

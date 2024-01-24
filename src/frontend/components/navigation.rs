@@ -23,11 +23,13 @@ pub fn navigation() -> Html {
     };
 
     html! {
+        <div class="navigation">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
             {go_home_button}
             {go_config_button}
             </div>
         </nav>
+        </div>
     }
 }

@@ -1,9 +1,9 @@
 use yew::prelude::*;
 
+use crate::frontend::components::config_form::ConfigForm;
 use crate::frontend::components::copy_url_clipboard::CopyUrlClipboard;
 use crate::frontend::components::navigation::Navigation;
 use crate::frontend::components::url_text::UrlText;
-use crate::frontend::components::config_form::ConfigForm;
 use crate::frontend::params::Params;
 
 #[function_component(Configuration)]
@@ -29,7 +29,7 @@ pub fn configuration() -> Html {
     );
 
     html! {
-        <>
+        <div id="configuration">
         <Navigation />
         <h1>{ "Config for your Webpage" }</h1>
         <p>{ "You need an NFT? Get one from " }<a href="https://azero.id/">{"AZERO.ID"}</a> {"."}</p>
@@ -38,6 +38,6 @@ pub fn configuration() -> Html {
         <UrlText url={url.clone()} />
         <br/>
         <CopyUrlClipboard url={url} />
-        </>
+        </div>
     }
 }

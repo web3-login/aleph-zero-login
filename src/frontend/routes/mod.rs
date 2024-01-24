@@ -2,9 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 use super::pages::configuration::Configuration;
-
-mod home;
-pub use home::Home;
+use super::pages::home::Home;
 
 use crate::frontend::params::Params;
 

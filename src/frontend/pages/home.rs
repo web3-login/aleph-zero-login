@@ -2,10 +2,10 @@ use yew::prelude::*;
 use yew_router::prelude::{use_location, use_navigator};
 
 use crate::chain::Chain;
-use crate::frontend::chain_select::ChainSelect;
+use crate::frontend::components::chain_select::ChainSelect;
+use crate::frontend::components::footer::Footer;
+use crate::frontend::components::login_url::LoginUrl;
 use crate::frontend::components::navigation::Navigation;
-use crate::frontend::footer::Footer;
-use crate::frontend::login_url::LoginUrl;
 use crate::frontend::params::Params;
 use crate::frontend::routes::Route;
 use crate::frontend::signature::Signature;
@@ -51,8 +51,7 @@ pub fn home() -> Html {
     let nonce = params.nonce.clone().unwrap_or("random".to_string().clone());
 
     html! {
-        <>
-
+        <div id="home">
         <Navigation />
         <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
             <h1>{ "Log in with your Azero.ID" }</h1>
@@ -66,10 +65,8 @@ pub fn home() -> Html {
                 { " token." }
             </p>
             <SigningExamplesComponent chain={(*selected_chain).clone()} {nonce} {on_signed} />
-            <p>{ "The signature is:" }</p>
-            <p>{ format!("{:?}", signature) }</p>
         </div>
         <Footer />
-        </>
+        </div>
     }
 }

@@ -8,6 +8,43 @@ body {
     background-color: whitesmoke;
 }
 
+#home {
+    min-height: 200px;
+}
+
+#configuration {
+    min-height: 200px;
+}
+
+.navigation {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 2.5rem;
+}
+
+.chain-select {
+    margin-top: 1rem;
+}
+
+.config-form {
+    margin-top: 2.5rem;
+}
+
+.copy-url-clipboard {
+    margin-top: 1rem;
+}
+
+.nft-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.url-text {
+    margin-top: 1rem;
+}
+
 #login-main {
     min-height: 200px;
 }

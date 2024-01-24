@@ -13,7 +13,7 @@ pub struct Props {
 }
 
 #[function_component(ChainSelect)]
-pub fn model_selection(props: &Props) -> Html {
+pub fn chain_select(props: &Props) -> Html {
     let on_change = {
         let on_select = props.on_select.clone();
         Callback::from(move |event: Event| {
@@ -27,11 +27,11 @@ pub fn model_selection(props: &Props) -> Html {
     };
 
     html! {
-        <>
+        <div class="chain-select">
             <select onchange={on_change}>
                 <option value="Azero" selected=true>{ "Azero" }</option>
                 <option value="AzeroTest">{ "AzeroTest" }</option>
             </select>
-        </>
+        </div>
     }
 }

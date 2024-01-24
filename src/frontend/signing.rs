@@ -251,7 +251,6 @@ impl Component for SigningExamplesComponent {
                 html!(
                     <div class="mb">
                             <b>{"Account used for signing: "}</b> <br/>
-                            {"Extension: "}{&signer_account.source} <br/>
                             {"Name: "}{&signer_account.name} <br/>
                             {"Address: "}{&signer_account.address} <br/>
                     </div>
@@ -339,14 +338,6 @@ impl Component for SigningExamplesComponent {
 
                 html!(
                     <>
-                        <div style="overflow-wrap: break-word;" class="mb">
-                            <b>{"Received signature: "}</b><br/>
-                            {hex::encode(signature.encode())}
-                        </div>
-                        <div style="overflow-wrap: break-word;" class="mb">
-                            <b>{"Hex representation of signed extrinsic: "}</b> <br/>
-                            {signed_extrinsic_hex}
-                        </div>
                         {submitting_stage_html}
                     </>
                 )
@@ -354,7 +345,7 @@ impl Component for SigningExamplesComponent {
         };
 
         html! {
-            <div>
+            <div class="signing">
                 {message_html}
                 <NftImage chain={ctx.props().chain.clone()} domain={self.message.clone()} />
                 {signer_account_html}
