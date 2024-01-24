@@ -29,7 +29,7 @@ Non fungible tokens are a proof for a digital ownership. This ownership can be u
 ## Quick Start
 
 ```sh
-cargo build
+cargo build --features=ssr --release --bin server
 trunk build --features=hydration --release --public-url /dist/
 cargo run --features=ssr --bin server
 ```
