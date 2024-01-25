@@ -1,10 +1,6 @@
 use super::nft_authorize::NFTAuthorize;
-use futures::executor::block_on;
 use openidconnect::{AccessToken, AuthorizationCode};
 use openidconnect::{EndUserWebsiteUrl, TokenResponse};
-use std::collections::HashMap;
-use std::sync::Arc;
-use std::sync::Mutex;
 use url::Url;
 use uuid::Uuid;
 use web3_login::authorize::AuthScope;
@@ -13,12 +9,7 @@ use web3_login::authorize::AuthorizeError;
 use web3_login::authorize::AuthorizeOutcome;
 use web3_login::claims::ClaimsMutex;
 use web3_login::config::Config;
-use web3_login::jwk::JWKImpl;
-use web3_login::prelude::*;
-use web3_login::token::TokenImpl;
 use web3_login::token::Tokens;
-use web3_login::userinfo::UserInfoImpl;
-use web3_login::well_known::WellKnownImpl;
 use web3_login::{
     claims::{additional_claims, standard_claims},
     config::{get_chain_id, get_node},
@@ -257,6 +248,8 @@ impl AuthorizeImpl {
 
 #[cfg(test)]
 mod tests {
+
+    use std::{collections::HashMap, sync::{Arc, Mutex}};
 
     use super::*;
 
