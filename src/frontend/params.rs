@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Params {
+    pub authorize_uri: Option<String>,
     pub client_id: Option<String>,
     pub state: Option<String>,
     pub nonce: Option<String>,
@@ -18,8 +19,9 @@ pub struct Params {
 impl Default for Params {
     fn default() -> Self {
         Params {
+            authorize_uri: Some("https://azero.web3-login.net/".to_string()),
             redirect_uri: Some("https%3A%2F%2Foidcdebugger.com%2Fdebug".to_string()),
-            state: None,
+            state: Some(uuid::Uuid::new_v4().to_string()),
             nonce: Some("random".to_string()),
             response_type: Some("code+id_token".to_string()),
             response_mode: Some("code+id_token".to_string()),
@@ -36,7 +38,7 @@ impl Params {
     pub fn merge_signature(&mut self, signature: &Signature) {
         self.account = Some(signature.account.clone());
         self.signature = Some(signature.signature.clone());
-        self.state = Some(signature.domain.clone());
+        self.contract = Some(signature.domain.clone());
     }
 
     pub fn merge_realm(&mut self, realm: &str) {
@@ -45,6 +47,9 @@ impl Params {
 
     pub fn merge_default(&mut self) {
         let default = Params::default();
+        if self.authorize_uri.is_none() {
+            self.authorize_uri = default.authorize_uri;
+        }
         if self.redirect_uri.is_none() {
             self.redirect_uri = default.redirect_uri;
         }

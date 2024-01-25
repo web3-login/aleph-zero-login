@@ -213,7 +213,6 @@ impl Component for SigningExamplesComponent {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-
         let message_html: Html = match &self.stage {
             SigningStage::Error(_)
             | SigningStage::EnterMessage

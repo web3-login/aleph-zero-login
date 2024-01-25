@@ -15,7 +15,8 @@ pub fn configuration() -> Html {
         Callback::from(move |new_params: Params| params.set(new_params))
     };
 
-    let url = format!("https://azero.id/?client_id={}&redirect_uri={}&response_type={}&response_mode={}&state={}&nonce={}&realm={}&signature={}&account={}&contract={}",
+    let url = format!("{}/?client_id={}&redirect_uri={}&response_type={}&response_mode={}&state={}&nonce={}&realm={}&signature={}&account={}&contract={}",
+        params.authorize_uri.clone().unwrap_or_default(),
         params.client_id.clone().unwrap_or_default(),
         params.redirect_uri.clone().unwrap_or_default(),
         params.response_type.clone().unwrap_or_default(),

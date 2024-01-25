@@ -1,7 +1,7 @@
 use super::nft_authorize::NFTAuthorize;
 use futures::executor::block_on;
-use openidconnect::TokenResponse;
 use openidconnect::{AccessToken, AuthorizationCode};
+use openidconnect::{EndUserWebsiteUrl, TokenResponse};
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -141,8 +141,8 @@ impl AuthorizeImpl {
             signature: signature.clone(),
             node: node_provider.clone(),
             realm: realm_or_chain_id.clone(),
-            contract: contract.clone(),
-            nft: state.clone(),
+            contract: "default".to_string(),
+            nft: Some(contract.clone()),
         };
 
         match authorize.authorize().await {
@@ -177,12 +177,15 @@ impl AuthorizeImpl {
         let code = AuthorizationCode::new(Uuid::new_v4().to_string());
         let chain_id = get_chain_id(&self.config, &realm_or_chain_id);
 
-        let standard_claims = standard_claims(&account.clone().unwrap());
+        let website = format!("https://{}.id", contract);
+
+        let standard_claims = standard_claims(&contract.to_string())
+            .set_website(Some(EndUserWebsiteUrl::new(website).into()));
 
         let node_provider_url = Url::parse(&node_provider).unwrap();
         let node_provider_host = node_provider_url.host().unwrap().to_string();
 
-        let additional_claims = additional_claims(
+        let mut additional_claims = additional_claims(
             &account.unwrap(),
             &nonce.clone().unwrap(),
             &signature.unwrap(),

@@ -74,3 +74,18 @@ trunk build --features=hydration --release --public-url /dist/
 ```sh
 trunk serve --features=hydration
 ```
+
+## License
+
+[MIT](LICENSE)
+
+## Warning
+
+This is experimental software. Use at your own risk.
+One security risk is, that the server does not verify the client id and client secret of a server that wants to authenticate a user.
+This means that any server can fetch information of a user token if the user has logged in to the server before.
+The token is a uuid v4 and can hardly be guessed. Just saying.
+
+## Disclaimer
+
+This is not an official Azero ID project. I am not affiliated with the Azero ID team. Use at your own risk.

@@ -17,7 +17,6 @@ pub fn config_form(props: &Props) -> Html {
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
             let mut new_params = params.clone();
-            // Update the corresponding field in new_params based on input's id or name
             match input.id().as_str() {
                 "client_id" => new_params.client_id = Some(input.value()),
                 "redirect_uri" => new_params.redirect_uri = Some(input.value()),
@@ -38,6 +37,10 @@ pub fn config_form(props: &Props) -> Html {
     html! {
         <div class="config-form">
         <form>
+        <div class="mb-3">
+        <label for="authorize_uri" class="form-label">{"Authorize Uri"}</label>
+        <input type="text" class="form-control" id="authorize_uri" value={props.params.client_id.clone()} oninput={oninput.clone()} />
+    </div>
         <div class="mb-3">
             <label for="client_id" class="form-label">{"Client ID"}</label>
             <input type="text" class="form-control" id="client_id" value={props.params.client_id.clone()} oninput={oninput.clone()} />
@@ -61,22 +64,6 @@ pub fn config_form(props: &Props) -> Html {
         <div class="mb-3">
             <label for="nonce" class="form-label">{"Nonce"}</label>
             <input type="text" class="form-control" id="nonce" value={props.params.nonce.clone()} oninput={oninput.clone()} />
-        </div>
-        <div class="mb-3">
-            <label for="realm" class="form-label">{"Realm"}</label>
-            <input type="text" class="form-control" id="realm" value={props.params.realm.clone()} oninput={oninput.clone()} />
-        </div>
-        <div class="mb-3">
-            <label for="signature" class="form-label">{"Signature"}</label>
-            <input type="text" class="form-control" id="signature" value={props.params.signature.clone()} oninput={oninput.clone()} />
-        </div>
-        <div class="mb-3">
-            <label for="account" class="form-label">{"Account"}</label>
-            <input type="text" class="form-control" id="account" value={props.params.account.clone()} oninput={oninput.clone()} />
-        </div>
-        <div class="mb-3">
-            <label for="contract" class="form-label">{"Contract"}</label>
-            <input type="text" class="form-control" id="contract" value={props.params.contract.clone()} oninput={oninput.clone()} />
         </div>
         </form>
         </div>
