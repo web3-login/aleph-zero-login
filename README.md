@@ -29,15 +29,14 @@ Non fungible tokens are a proof for a digital ownership. This ownership can be u
 ## Quick Start
 
 ```sh
-cargo build --features=ssr --release --bin server
-trunk build --features=hydration --release --public-url /dist/
-cargo run --features=ssr --bin server
+trunk build
+cargo run --bin server
 ```
 
 ## Test
 
 ```sh
-cargo test --features=ssr -- --nocapture
+cargo test -- --nocapture
 ```
 
 ## Configuration
@@ -66,13 +65,13 @@ openssl genpkey -algorithm ed25519 -out assets/do_not_use.pem
 ### Build frontend
 
 ```sh
-trunk build --features=hydration --release --public-url /dist/
+trunk build
 ```
 
 ### Develop frontend
 
 ```sh
-trunk serve --features=hydration
+trunk serve
 ```
 
 ## License

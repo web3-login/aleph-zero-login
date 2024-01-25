@@ -185,7 +185,7 @@ impl AuthorizeImpl {
         let node_provider_url = Url::parse(&node_provider).unwrap();
         let node_provider_host = node_provider_url.host().unwrap().to_string();
 
-        let mut additional_claims = additional_claims(
+        let additional_claims = additional_claims(
             &account.unwrap(),
             &nonce.clone().unwrap(),
             &signature.unwrap(),
@@ -265,7 +265,7 @@ mod tests {
         let nonce = "random";
         let signature = "0x264fb4760958f40fc4886152f6a8e49615c7750341ce050849f7592e800f925aca43cc161c7b94250c5ecc89b8ab528132ceae69697ea85dd9822a81b58f568f";
         let account = "5Esx8QLfERemJmBmhZ9aJDgBmw69vLaE6rN5FNx3VPZDY1fn";
-        let state = "chriamue.tzero";
+        let contract = "chriamue.tzero";
 
         let mut config = Config::default();
         config.eddsa_pem = Some("-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIGWObwgsl5OQvHbjsTxMxuhnLaAXysh/+2AKHYXXVfoK\n-----END PRIVATE KEY-----".into());
@@ -288,14 +288,14 @@ mod tests {
                 Some("AzeroTest".into()),
                 "client_id".into(),
                 "http://localhost:3000".into(),
-                Some(state.into()),
+                Some("state".into()),
                 Some("code".into()),
                 Some("query".into()),
                 Some(nonce.into()),
                 Some(account.into()),
                 Some(signature.into()),
                 Some("chain_id".into()),
-                Some("contract".into()),
+                Some(contract.into()),
             )
             .await;
 
@@ -306,7 +306,7 @@ mod tests {
         match outcome {
             AuthorizeOutcome::RedirectNeeded(url) => {
                 assert_eq!(url.contains("http://localhost:3000"), true);
-                assert_eq!(url.contains("state=chriamue.tzero"), true);
+                assert_eq!(url.contains("state=state"), true);
                 assert!(url.contains("code="));
                 assert_eq!(url.contains("nonce="), false);
                 assert_eq!(url.contains("response_type="), false);

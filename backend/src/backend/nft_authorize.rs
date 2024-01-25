@@ -1,16 +1,8 @@
-use super::azero;
 use super::azero_id::AzeroId;
-use crate::chain;
-use crate::frontend::signature;
 use async_trait::async_trait;
 use web3_login::authorize::Authorize;
 use web3_login::authorize::AuthorizeError;
-use web3_login::nft_owner::NFTOwner;
 use web3_login::signature_validator::SignatureValidator;
-use web3_login::web3::is_nft_owner_of;
-use web3_login::web3::validate_signature;
-
-use super::azero_id;
 
 pub struct NFTAuthorize {
     pub account: Option<String>,
@@ -25,8 +17,6 @@ pub struct NFTAuthorize {
 impl NFTAuthorize {
     async fn check_nft(&self) -> Result<(), AuthorizeError> {
         let account = self.get_account().as_ref().unwrap().to_string();
-        let nonce = self.get_nonce().as_ref().unwrap().to_string();
-        let signature = self.get_signature().as_ref().unwrap().to_string();
         let contract = self.contract.clone();
 
         let chain = self.realm.clone();

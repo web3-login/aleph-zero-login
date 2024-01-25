@@ -1,4 +1,4 @@
-use aleph_zero_login::frontend::app::App;
+use frontend_lib::frontend::app::App;
 
 fn main() {
     #[cfg(target_arch = "wasm32")]

@@ -1,5 +1,4 @@
 use std::str::FromStr;
-use web3_login::nft_owner::NFTOwner;
 use web3_login::signature_validator::SignatureValidator;
 
 use hex::FromHex;
@@ -9,8 +8,6 @@ use sp_core::{crypto::AccountId32, Pair};
 use super::azero::get_owner as get_azero_owner;
 use super::tzero::get_owner as get_tzero_owner;
 use crate::chain::Chain;
-use crate::frontend::signature;
-use futures::executor::block_on;
 
 #[derive(Default)]
 pub struct AzeroId {}

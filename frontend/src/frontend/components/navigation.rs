@@ -1,6 +1,6 @@
-use crate::frontend::routes::{switch, Route};
+use crate::frontend::routes::Route;
 use yew::prelude::*;
-use yew_router::prelude::{use_location, use_navigator};
+use yew_router::prelude::use_navigator;
 
 #[function_component(Navigation)]
 pub fn navigation() -> Html {

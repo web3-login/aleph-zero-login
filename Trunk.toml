@@ -1,0 +1,5 @@
+[build]
+release = true
+target = "frontend/index.html"
+dist = "dist"
+public_url = "/dist/"

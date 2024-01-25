@@ -1,7 +1,7 @@
-use aleph_zero_login::backend::config::load_config;
-use aleph_zero_login::backend::server::create_server;
-use aleph_zero_login::backend::server::router;
 use axum::Router;
+use backend::backend::config::load_config;
+use backend::backend::server::create_server;
+use backend::backend::server::router;
 use clap::Parser;
 use std::net::Ipv4Addr;
 use std::net::SocketAddrV4;
@@ -71,26 +71,4 @@ async fn serve(app: Router, port: u16) {
     axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use axum::{
-        body::Body,
-        http::{Request, StatusCode},
-    };
-    use tower::ServiceExt; // for `oneshot` function
-
-    #[tokio::test]
-    async fn test_using_serve_dir() {
-        let req = Request::builder()
-            .method("GET")
-            .uri("/index.html")
-            .body(Body::empty())
-            .unwrap();
-
-        let response = serve_dir("/", "static/".into()).oneshot(req).await.unwrap();
-        assert_eq!(response.status(), StatusCode::OK);
-    }
 }
