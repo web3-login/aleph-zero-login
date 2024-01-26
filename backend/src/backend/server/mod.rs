@@ -7,6 +7,7 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::sync::Arc;
 use std::sync::Mutex;
+use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::ServeDir;
 use tower_http::services::ServeFile;
 use web3_login::claims::ClaimsMutex;
@@ -22,6 +23,7 @@ use web3_login::userinfo::UserInfoImpl;
 use web3_login::well_known::WellKnownImpl;
 
 pub fn router(app: Server) -> Result<Router, Box<dyn Error>> {
+    let cors = CorsLayer::new().allow_origin(Any);
     let router = Router::new()
         .route("/frontend", get(get_frontend))
         .route("/providers", get(get_providers))
@@ -39,6 +41,8 @@ pub fn router(app: Server) -> Result<Router, Box<dyn Error>> {
         .nest("/:realm/", oidc_routes())
         .nest("/account", oidc_routes())
         .nest("/account/:realm/", oidc_routes());
+
+    let router = router.layer(cors);
 
     Ok(router.with_state(app))
 }

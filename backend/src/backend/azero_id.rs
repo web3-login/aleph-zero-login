@@ -158,7 +158,7 @@ mod tests {
 
     #[test]
     fn test_validate_signature2() {
-        use subxt_signer::{ecdsa, sr25519};
+        use subxt_signer::sr25519;
 
         let nonce = "random";
         let nonce = format!("<Bytes>{}</Bytes>", nonce);
