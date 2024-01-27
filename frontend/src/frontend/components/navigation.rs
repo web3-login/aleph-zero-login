@@ -14,6 +14,14 @@ pub fn navigation() -> Html {
         }
     };
 
+    let go_example_button = {
+        let navigator = navigator.clone();
+        let onclick = Callback::from(move |_| navigator.push(&Route::Example));
+        html! {
+            <button {onclick}>{"Example App"}</button>
+        }
+    };
+
     let go_config_button = {
         let navigator = navigator.clone();
         let onclick = Callback::from(move |_| navigator.push(&Route::Configuration));
@@ -27,6 +35,7 @@ pub fn navigation() -> Html {
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
             {go_home_button}
+            {go_example_button}
             {go_config_button}
             </div>
         </nav>

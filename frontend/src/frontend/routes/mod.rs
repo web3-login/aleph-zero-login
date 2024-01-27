@@ -2,6 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 use super::pages::configuration::Configuration;
+use super::pages::example::Example;
 use super::pages::home::Home;
 
 use crate::frontend::params::Params;
@@ -10,6 +11,8 @@ use crate::frontend::params::Params;
 pub enum Route {
     #[at("/")]
     Home,
+    #[at("/example")]
+    Example,
     #[at("/authorize")]
     Authorize,
     #[at("/config")]
@@ -37,6 +40,7 @@ pub fn authorize() -> Html {
 pub fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => html! { <Home /> },
+        Route::Example => html! { <Example /> },
         Route::Configuration => html! { <Configuration /> },
         Route::Authorize => html! { <Authorize /> },
         Route::NotFound => html! { <h1>{ "404" }</h1> },

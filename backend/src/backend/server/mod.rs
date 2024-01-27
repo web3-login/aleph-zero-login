@@ -28,7 +28,7 @@ pub fn router(app: Server) -> Result<Router, Box<dyn Error>> {
         .route("/frontend", get(get_frontend))
         .route("/providers", get(get_providers))
         .route("/realms", get(get_realms))
-        .nest_service("/index.html", ServeFile::new("static/index.html"))
+        .nest_service("/example", ServeFile::new("dist/index.html"))
         .nest_service("/favicon.ico", ServeFile::new("static/favicon.ico"))
         .nest_service("/index.css", ServeDir::new("static/index.css"))
         .nest_service("/index.js", ServeDir::new("static/index.js"))
