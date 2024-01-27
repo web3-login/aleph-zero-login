@@ -7,7 +7,7 @@ use rust_2048::Model;
 
 #[function_component(Example)]
 pub fn example() -> Html {
-    let config = Config::new("example-client", "http://localhost:8080");
+    let config = Config::new("example-client", "https://azero.web3-login.net");
 
     html! {
         <div id="example">
