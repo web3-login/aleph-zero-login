@@ -1,4 +1,5 @@
 use super::nft_authorize::NFTAuthorize;
+use chrono::Utc;
 use openidconnect::{AccessToken, AuthorizationCode};
 use openidconnect::{EndUserWebsiteUrl, TokenResponse};
 use url::Url;
@@ -49,6 +50,8 @@ impl AuthorizeTrait for AuthorizeImpl {
         signature: Option<String>,
         chain_id: Option<String>,
         contract: Option<String>,
+        code_challenge: Option<String>,
+        code_challenge_method: Option<String>,
     ) -> Result<AuthorizeOutcome, Box<dyn std::error::Error>> {
         self.authorize_nft(
             realm.unwrap_or_else(|| "default".into()),
@@ -62,6 +65,8 @@ impl AuthorizeTrait for AuthorizeImpl {
             signature,
             chain_id,
             contract,
+            code_challenge,
+            code_challenge_method,
         )
         .await
     }
@@ -81,6 +86,8 @@ impl AuthorizeImpl {
         signature: Option<String>,
         chain_id: Option<String>,
         contract: Option<String>,
+        code_challenge: Option<String>,
+        code_challenge_method: Option<String>,
     ) -> Result<AuthorizeOutcome, Box<dyn std::error::Error>> {
         let redirect_uri: String = urlencoding::decode(&redirect_uri)?.into();
         log::debug!("redirect_uri: {}", redirect_uri);
@@ -114,6 +121,14 @@ impl AuthorizeImpl {
                     &chain_id.clone().unwrap_or_else(|| realm.clone()),
                 )
                 .append_pair("contract", &contract.unwrap_or_else(|| client_id.clone()));
+            if let Some(code_challenge) = code_challenge {
+                url.query_pairs_mut()
+                    .append_pair("code_challenge", &code_challenge);
+            }
+            if let Some(code_challenge_method) = code_challenge_method {
+                url.query_pairs_mut()
+                    .append_pair("code_challenge_method", &code_challenge_method);
+            }
             return Ok(AuthorizeOutcome::RedirectNeeded(url.to_string()));
         };
 
@@ -165,13 +180,24 @@ impl AuthorizeImpl {
         let mut redirect_uri = parsed_redirect_uri.unwrap();
 
         let access_token = AccessToken::new(Uuid::new_v4().to_string());
-        let code = AuthorizationCode::new(Uuid::new_v4().to_string());
+
+        let code = match code_challenge {
+            Some(challenge) => {
+                let code_challenge_method = code_challenge_method.unwrap_or_else(|| "plain".into());
+                let uuid_code = Uuid::new_v4().to_string();
+                let challenge_code = challenge.clone();
+                AuthorizationCode::new(format!("{}-{}", uuid_code, challenge_code))
+            }
+            None => AuthorizationCode::new(Uuid::new_v4().to_string()),
+        };
+
         let chain_id = get_chain_id(&self.config, &realm_or_chain_id);
 
         let website = format!("https://{}.id", contract);
 
         let standard_claims = standard_claims(&contract.to_string())
-            .set_website(Some(EndUserWebsiteUrl::new(website).into()));
+            .set_website(Some(EndUserWebsiteUrl::new(website).into()))
+            .set_updated_at(Some(Utc::now().into()));
 
         let node_provider_url = Url::parse(&node_provider).unwrap();
         let node_provider_host = node_provider_url.host().unwrap().to_string();
@@ -291,6 +317,8 @@ mod tests {
                 Some(signature.into()),
                 Some("chain_id".into()),
                 Some(contract.into()),
+                Some("code_challenge".into()),
+                Some("code_challenge_method".into()),
             )
             .await;
 
@@ -310,6 +338,8 @@ mod tests {
                 assert_eq!(url.contains("realm="), false);
                 assert_eq!(url.contains("chain_id="), false);
                 assert_eq!(url.contains("contract="), false);
+                assert_eq!(url.contains("code_challenge="), false);
+                assert_eq!(url.contains("code_challenge_method="), false);
             }
             AuthorizeOutcome::Denied(message) => panic!("should not denied: {}", message),
             AuthorizeOutcome::Error(err) => panic!("should not error: {}", err),
