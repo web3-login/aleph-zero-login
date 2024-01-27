@@ -42,4 +42,6 @@ wasm-bindgen-futures = "0.4"
 wasm-logger = "0.2"
 web-sys = { version = "0.3", features = ["HtmlSelectElement"] }
 
+rust-2048 = { git = "https://github.com/chriamue/wasm-2048" }
+
 [dev-dependencies]

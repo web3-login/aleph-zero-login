@@ -3,13 +3,14 @@ use yew::prelude::*;
 use yew_oauth2::config::openid::Config;
 use yew_oauth2::openid::{use_auth_agent, OAuth2};
 use yew_oauth2::prelude::*;
+use rust_2048::Model;
 
 #[function_component(Example)]
 pub fn example() -> Html {
     let config = Config::new("example-client", "http://localhost:8080");
 
     html! {
-        <div id="home">
+        <div id="example">
         <Navigation />
         <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
             <h1>{ "Example App" }</h1>
@@ -38,6 +39,7 @@ fn my_app_main() -> Html {
         <Failure><FailureMessage/></Failure>
         <Authenticated>
           <button onclick={logout}>{ "Logout" }</button>
+            <Model/>
         </Authenticated>
         <NotAuthenticated>
           <button onclick={login}>{ "Login" }</button>
