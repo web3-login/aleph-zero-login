@@ -58,7 +58,8 @@ subxt metadata --output-file azero-testnet-metadata.scale --url wss://ws.test.az
 ### Generate Keys
 
 ```sh
-openssl genpkey -algorithm ed25519 -out assets/do_not_use.pem
+openssl genpkey -algorithm ed25519 -out private_eddsa.pem
+openssl genrsa --traditional -out private_rsa.pem 1024
 ```
 
 

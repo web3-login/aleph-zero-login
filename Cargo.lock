@@ -726,6 +726,7 @@ dependencies = [
  "openidconnect",
  "parity-scale-codec",
  "pretty_env_logger",
+ "rsa",
  "serde",
  "serde_json",
  "serde_qs",
@@ -816,8 +817,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93f2635620bf0b9d4576eb7bb9a38a55df78bd1205d26fa994b25911a69f212f"
 dependencies = [
  "bitcoin_hashes",
- "rand 0.8.5",
- "rand_core 0.6.4",
+ "rand 0.7.3",
+ "rand_core 0.5.1",
  "serde",
  "unicode-normalization",
 ]
@@ -2854,7 +2855,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.5.5",
+ "socket2 0.4.10",
  "tokio",
  "tower-service",
  "tracing",
@@ -6945,7 +6946,7 @@ checksum = "97fee6b57c6a41524a810daee9286c02d7752c4253064d0b05472833a438f675"
 dependencies = [
  "cfg-if",
  "digest 0.10.7",
- "rand 0.8.5",
+ "rand 0.7.3",
  "static_assertions",
 ]
 
@@ -7458,8 +7459,8 @@ dependencies = [
 
 [[package]]
 name = "web3-login"
-version = "0.4.1"
-source = "git+https://github.com/web3-login/web3-login#c8f40f20b769be9b2749ff896337e6e866757528"
+version = "0.4.7"
+source = "git+https://github.com/web3-login/web3-login#277be7b404a2f0584837982b0b526a99f833ab46"
 dependencies = [
  "async-trait",
  "axum",

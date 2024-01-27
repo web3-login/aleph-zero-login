@@ -3,6 +3,10 @@ use backend::backend::config::load_config;
 use backend::backend::server::create_server;
 use backend::backend::server::router;
 use clap::Parser;
+use rsa::pkcs1::DecodeRsaPrivateKey;
+use rsa::pkcs1::DecodeRsaPublicKey;
+use rsa::pkcs8::EncodePublicKey;
+use rsa::{Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey};
 use std::net::Ipv4Addr;
 use std::net::SocketAddrV4;
 use std::path::PathBuf;
@@ -48,6 +52,14 @@ async fn main() {
     log::info!("config: {:?}", config);
 
     let web3_login_config = load_yml_config(opts.config.into());
+
+    let priv_pem = std::fs::read_to_string::<PathBuf>(web3_login_config.rsa_pem_file.as_ref().unwrap().into()).unwrap();
+
+    let priv_key = RsaPrivateKey::from_pkcs1_pem(&priv_pem).unwrap();
+
+    let pub_key = RsaPublicKey::from(&priv_key);
+    
+    log::info!("pub_key: \n{}", pub_key.to_public_key_pem(rsa::pkcs8::LineEnding::CRLF).unwrap());
 
     let server = create_server(web3_login_config);
     let app = router(server).unwrap();
