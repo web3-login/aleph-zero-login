@@ -1,0 +1,25 @@
+@startuml Flow
+actor User
+participant "Client\n(Web Application)" as Client
+participant "Web3-Login OpenID Provider\n(OP)" as OP
+participant "Aleph Zero Blockchain\n(AZ)" as AZ
+
+User -> Client: Initiate login request
+note right of Client: Request includes\nredirect URI
+Client -> OP: Redirect to OP with Client ID\nand redirect URI
+note right of OP: OP presents login screen\nand requests wallet signature\nand Azero.ID
+OP -> User: Prompt for Wallet Address,\nDigital Signature,\nand Azero.ID
+User -> OP: Provide Wallet Address,\nDigital Signature,\nand Azero.ID
+OP -> AZ: Validate Wallet Signature\nand check AzeroID ownership\nagainst provided Azero.ID
+AZ --> OP: Confirm ownership of Azero.ID\nand account validity
+note right of OP: On successful validation,\nOP generates authorization code
+OP -> User: Redirect to Client\nwith authorization code
+note right of User: User is redirected\nback to Client
+User -> Client: Provide authorization code
+Client -> OP: Request tokens with\nauthorization code and Client Secret
+note right of OP: OP validates\nauthorization code and Client Secret
+OP -> Client: Respond with ID token\nand Access token
+note right of Client: Client validates ID token\nand extracts user information
+Client -> User: Grant access based on\nauthenticated identity
+
+@enduml

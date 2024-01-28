@@ -10,9 +10,21 @@
 
 🛠 It is an adoption of my [NFT Login](https://github.com/nft-login/nft-login) project to the [Azero ID](https://azero.id/) NFT.
 
+🌐 The server is online at [azero.web3-login.net](https://azero.web3-login.net/).
+
 ## 💡 Motivation
 
 💎 Non fungible tokens are a proof of digital ownership. This ownership can be used to give access to any digital resource or service.
+
+## 📚 How it works
+
+🔐 The server is an OpenId Connect server. It uses the [Azero ID](https://azero.id/) NFT as a proof of ownership. The user can login with the [Azero ID](https://azero.id/) NFT. The server verifies the signature of the token and returns a JWT token. The JWT token can be used to authenticate the user.
+
+🔑 The server can be configured to use RSA or EDDSA keys. The keys are used to sign the JWT token. The public keys can be viewed at the /jwk endpoint.
+
+📝 The server can be configured with a config.yml file. The config.yml file can be used to configure the keys and the OpenId Connect endpoints.
+
+![Flow](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/web3-login/aleph-zero-login/main/flow.puml)
 
 ## 🌈 Features
 
