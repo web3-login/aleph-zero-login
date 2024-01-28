@@ -12,6 +12,8 @@
 
 🌐 The server is online at [azero.web3-login.net](https://azero.web3-login.net/).
 
+[![Video](https://img.youtube.com/vi/YIK05Y_kLG4/0.jpg)](https://youtu.be/YIK05Y_kLG4)
+
 ## 💡 Motivation
 
 💎 Non fungible tokens are a proof of digital ownership. This ownership can be used to give access to any digital resource or service.
