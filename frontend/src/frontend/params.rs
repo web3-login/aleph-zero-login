@@ -19,12 +19,12 @@ pub struct Params {
 impl Default for Params {
     fn default() -> Self {
         Params {
-            authorize_uri: Some("http://localhost:8081".to_string()),
+            authorize_uri: Some("https://azero.web3-login.net".to_string()),
             redirect_uri: Some("https%3A%2F%2Foidcdebugger.com%2Fdebug".to_string()),
             state: Some(uuid::Uuid::new_v4().to_string()),
             nonce: Some("random".to_string()),
-            response_type: Some("code+id_token".to_string()),
-            response_mode: Some("code+id_token".to_string()),
+            response_type: Some("code".to_string()),
+            response_mode: Some("form_post".to_string()),
             realm: Some("AzeroTest".to_string()),
             client_id: Some("none".to_string()),
             signature: None,

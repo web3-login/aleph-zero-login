@@ -28,7 +28,7 @@ pub fn chain_select(props: &Props) -> Html {
 
     html! {
         <div class="chain-select">
-            <select onchange={on_change}>
+            <select class="form-select" aria-label="Select chain" onchange={on_change}>
                 <option value="Azero" selected=true>{ "Azero" }</option>
                 <option value="AzeroTest">{ "AzeroTest" }</option>
             </select>

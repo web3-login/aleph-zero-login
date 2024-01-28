@@ -14,7 +14,7 @@ pub fn login_url(props: &Props) -> Html {
     };
     html! {
         <div class="login-url">
-            <p> { format!("Login to: {}", url) }</p>
+        {"Login to: "}<input type="text" readonly={true} value={ format!("{}", url) } />
         </div>
     }
 }

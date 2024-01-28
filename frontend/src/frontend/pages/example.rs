@@ -13,7 +13,7 @@ pub fn example() -> Html {
         <div id="example">
         <Navigation />
         <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
-            <h1>{ "Example App" }</h1>
+            <h1>{ "Play 2048" }</h1>
             <OAuth2 {config}>
             <MyApplicationMain/>
           </OAuth2>
@@ -43,6 +43,7 @@ fn my_app_main() -> Html {
         </Authenticated>
         <NotAuthenticated>
           <button onclick={login}>{ "Login" }</button>
+          <p>{ "You need an NFT? Get one from " }<a href="https://azero.id/">{"AZERO.ID"}</a> {"."}</p>
         </NotAuthenticated>
       </>
     )

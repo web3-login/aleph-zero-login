@@ -38,10 +38,6 @@ pub fn config_form(props: &Props) -> Html {
         <div class="config-form">
         <form>
         <div class="mb-3">
-        <label for="authorize_uri" class="form-label">{"Authorize Uri"}</label>
-        <input type="text" class="form-control" id="authorize_uri" value={props.params.client_id.clone()} oninput={oninput.clone()} />
-    </div>
-        <div class="mb-3">
             <label for="client_id" class="form-label">{"Client ID"}</label>
             <input type="text" class="form-control" id="client_id" value={props.params.client_id.clone()} oninput={oninput.clone()} />
         </div>

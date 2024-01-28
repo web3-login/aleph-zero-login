@@ -38,9 +38,7 @@ pub fn configuration() -> Html {
         <h1>{ "Config for your Webpage" }</h1>
         </div>
         <div id="configuration-content" class="row card justify-content-center d-grid gap-3">
-            <p>{ "You need an NFT? Get one from " }<a href="https://azero.id/">{"AZERO.ID"}</a> {"."}</p>
-            <p>{ "This is the configuration page" }</p>
-            <ConfigForm params = {(*params).clone()} on_change = {update_params} />
+<ConfigForm params = {(*params).clone()} on_change = {update_params} />
             <UrlText url={url.clone()} />
             <br/>
             <CopyUrlClipboard url={url} />

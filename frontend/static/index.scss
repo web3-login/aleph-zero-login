@@ -22,8 +22,7 @@ body {
 }
 
 #home input {
-    width: 40%;
-    padding: 12px 20px;
+    width: 60%;
     margin: 8px 0;
     box-sizing: border-box;
     border: 1px solid #3498db;
@@ -32,17 +31,9 @@ body {
     transition: width 0.4s ease-in-out;
 }
 
-#home input[type=text] {
-    background-image: url('icon--primary-on-transparent.svg');
-    background-size: 24px;
-    background-position: 10px 10px;
-    background-repeat: no-repeat;
-    padding-left: 40px;
-}
-
 #home input[type=text]:focus {
     width: 90%;
-  }
+}
 
 #configuration {
     display: flex;
@@ -92,6 +83,14 @@ body {
 
 .nft-input {
     margin-top: 1rem;
+}
+
+.nft-input input[type=text] {
+    padding: 12px 60px;
+    background-image: url('icon--primary-on-transparent.svg');
+    background-size: 24px;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
 }
 
 .url-text {
