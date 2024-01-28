@@ -24,7 +24,7 @@
 
 📝 The server can be configured with a config.yml file. The config.yml file can be used to configure the keys and the OpenId Connect endpoints.
 
-![Flow](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/web3-login/aleph-zero-login/main/flow.puml)
+![Flow](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/web3-login/aleph-zero-login/main/flow.puml)
 
 ## 🌈 Features
 
