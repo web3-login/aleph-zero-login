@@ -20,7 +20,7 @@ Non fungible tokens are a proof for a digital ownership. This ownership can be u
 - [x] OpenId Connect
 - [ ] OAuth2
 
-## Dependencies
+## Build on top of
 
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Axum](https://crates.io/crates/axum)

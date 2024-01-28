@@ -1,9 +1,9 @@
 use crate::frontend::components::{footer::Footer, navigation::Navigation};
+use rust_2048::Model;
 use yew::prelude::*;
 use yew_oauth2::config::openid::Config;
 use yew_oauth2::openid::{use_auth_agent, OAuth2};
 use yew_oauth2::prelude::*;
-use rust_2048::Model;
 
 #[function_component(Example)]
 pub fn example() -> Html {

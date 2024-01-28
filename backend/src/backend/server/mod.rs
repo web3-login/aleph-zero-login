@@ -83,9 +83,3 @@ pub fn create_server(config: Config) -> Server {
         authorize,
     }
 }
-
-#[cfg(test)]
-mod tests {
-
-    async fn test_authorize() {}
-}

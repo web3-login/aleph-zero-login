@@ -2,6 +2,7 @@ use yew::prelude::*;
 
 use crate::frontend::components::config_form::ConfigForm;
 use crate::frontend::components::copy_url_clipboard::CopyUrlClipboard;
+use crate::frontend::components::footer::Footer;
 use crate::frontend::components::navigation::Navigation;
 use crate::frontend::components::url_text::UrlText;
 use crate::frontend::params::Params;
@@ -32,13 +33,20 @@ pub fn configuration() -> Html {
     html! {
         <div id="configuration">
         <Navigation />
+        <div>
+        <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
         <h1>{ "Config for your Webpage" }</h1>
-        <p>{ "You need an NFT? Get one from " }<a href="https://azero.id/">{"AZERO.ID"}</a> {"."}</p>
-        <p>{ "This is the configuration page" }</p>
-        <ConfigForm params = {(*params).clone()} on_change = {update_params} />
-        <UrlText url={url.clone()} />
-        <br/>
-        <CopyUrlClipboard url={url} />
+        </div>
+        <div id="configuration-content" class="row card justify-content-center d-grid gap-3">
+            <p>{ "You need an NFT? Get one from " }<a href="https://azero.id/">{"AZERO.ID"}</a> {"."}</p>
+            <p>{ "This is the configuration page" }</p>
+            <ConfigForm params = {(*params).clone()} on_change = {update_params} />
+            <UrlText url={url.clone()} />
+            <br/>
+            <CopyUrlClipboard url={url} />
+        </div>
+        </div>
+        <Footer />
         </div>
     }
 }

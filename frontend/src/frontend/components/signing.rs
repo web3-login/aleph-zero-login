@@ -1,6 +1,6 @@
-use super::services::{get_accounts, sign_nonce, to_hex, Account};
-use super::signature::Signature;
 use crate::chain::Chain;
+use crate::frontend::services::{get_accounts, sign_nonce, to_hex, Account};
+use crate::frontend::signature::Signature;
 use anyhow::anyhow;
 use futures::FutureExt;
 use web_sys::console;

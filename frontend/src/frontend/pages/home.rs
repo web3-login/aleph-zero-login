@@ -8,9 +8,9 @@ use crate::frontend::components::login_url::LoginUrl;
 use crate::frontend::components::navigation::Navigation;
 use crate::frontend::components::nft_image::NftImage;
 use crate::frontend::components::nft_input::NftInput;
+use crate::frontend::components::signing::SigningExamplesComponent;
 use crate::frontend::params::Params;
 use crate::frontend::signature::Signature;
-use crate::frontend::signing::SigningExamplesComponent;
 
 #[function_component(Home)]
 pub fn home() -> Html {
@@ -58,22 +58,26 @@ pub fn home() -> Html {
     html! {
         <div id="home">
         <Navigation />
+        <div>
         <div class="jumbotron mt-4 p-3 mb-5 bg-light rounded shadow">
             <h1>{ "Log in with your Azero.ID" }</h1>
         </div>
         <div class="row card justify-content-center d-grid gap-3">
-            <p>{ "This is a demo of the Azero.ID login system." }</p>
+            <p>{ "This is a demo of a openidconnect login system based on Azero.ID." }</p>
             <LoginUrl  params={params.clone()} />
             <p>
                 { "To log in, you need to have an " }
                 <ChainSelect on_select={on_chain_select} />
                 { " token." }
             </p>
+        </div>
+        <div class="row card justify-content-center d-grid gap-3">
 
             <NftImage chain={(*selected_chain).clone()} domain={(*nft_id).clone()} />
             <NftInput chain={(*selected_chain).clone()} nft_id={(*nft_id).clone()} onchange={on_nft_id_change} />
 
             <SigningExamplesComponent chain={(*selected_chain).clone()} nft_id={(*nft_id).clone()} {nonce} {on_signed} />
+        </div>
         </div>
         <Footer />
         </div>
