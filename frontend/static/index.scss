@@ -5,6 +5,7 @@ html {
 
 body {
     font-family: 'Arial', sans-serif;
+    font-size: 1.3rem;
     background: #ecf0f1;
     margin: 0 auto;
     padding: 40px;
@@ -88,7 +89,7 @@ body {
 .nft-input input[type=text] {
     padding: 12px 60px;
     background-image: url('icon--primary-on-transparent.svg');
-    background-size: 24px;
+    background-size: 32px;
     background-position: 10px 10px;
     background-repeat: no-repeat;
 }
