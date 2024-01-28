@@ -8,7 +8,6 @@ body {
     font-size: 1.3rem;
     background: #ecf0f1;
     margin: 0 auto;
-    padding: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,11 +32,12 @@ body {
 }
 
 #home input[type=text]:focus {
-    width: 90%;
+    width: 70%;
 }
 
 #configuration {
     display: flex;
+    flex-direction: column;
     text-align: center;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -63,6 +63,10 @@ body {
     height: 2.5rem;
 }
 
+.url-text {
+    margin-top: 1rem;
+}
+
 .chain-select {
     margin-top: 1rem;
 }
@@ -73,17 +77,18 @@ body {
 }
 
 .copy-url-clipboard {
-    margin-top: 1rem;
+    margin-top: 5rem;
 }
 
 .nft-image {
     width: 60%;
     height: 60%;
-    object-fit: contain;
+    margin: 0 auto;
 }
 
 .nft-input {
     margin-top: 1rem;
+    margin-inline: auto;
 }
 
 .nft-input input[type=text] {
@@ -94,23 +99,24 @@ body {
     background-repeat: no-repeat;
 }
 
-.url-text {
-    margin-top: 1rem;
-}
 
 #login-main {
     min-height: 200px;
 }
 
 .footer {
+    margin: auto;
     position: absolute;
     bottom: 0;
-    width: 100%;
+    width: 80%;
     height: 2.5rem;
 }
 
-
 // styles
+
+.card {
+    padding: 1rem;
+}
 
 h1 {
     color: #3498db;
@@ -129,4 +135,54 @@ button {
 
 button:hover {
     background-color: #2980b9;
+}
+
+
+@media only screen and (max-width: 600px) {
+    body {
+        font-size: 1rem;
+        padding: 20px;
+    }
+
+    #home input, .config-form {
+        width: 100%;
+    }
+
+    .navigation {
+        width: 100%;
+        left: 0;
+        justify-content: space-between;
+    }
+
+    .navigation, .footer {
+        width: 100%;
+    }
+
+    .nft-input {
+        margin-top: 0rem;
+    }
+
+    .nft-input input[type=text] {
+        padding: 8px 40px;
+        background-size: 24px;
+    }
+
+    .config-form {
+        margin-top: 0rem;
+        padding: 0;
+        font-size: small;
+    }
+
+    .url-text textarea {
+        width: 100%;
+    }
+
+    .copy-url-clipboard {
+        margin-top: 1rem;
+    }
+
+    button {
+        scale: 0.8;
+        padding: 5px 10px;
+    }
 }

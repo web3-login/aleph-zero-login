@@ -1,4 +1,5 @@
 /dist
+/frontend/dist
 /target
 .env
 

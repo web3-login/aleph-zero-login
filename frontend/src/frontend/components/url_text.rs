@@ -9,7 +9,7 @@ pub struct Props {
 pub fn url_text(props: &Props) -> Html {
     html! {
         <div class="url-text">
-            <textarea id="url_text" rows="3" max-rows="6" cols="100" readonly=true value={props.url.clone()} />
+            <textarea id="url_text" rows="5" max-rows="6" cols="80" readonly=true value={props.url.clone()} />
         </div>
     }
 }

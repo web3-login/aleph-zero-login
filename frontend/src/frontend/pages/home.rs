@@ -8,7 +8,7 @@ use crate::frontend::components::login_url::LoginUrl;
 use crate::frontend::components::navigation::Navigation;
 use crate::frontend::components::nft_image::NftImage;
 use crate::frontend::components::nft_input::NftInput;
-use crate::frontend::components::signing::SigningExamplesComponent;
+use crate::frontend::components::signing::Signing;
 use crate::frontend::params::Params;
 use crate::frontend::signature::Signature;
 
@@ -71,12 +71,10 @@ pub fn home() -> Html {
                 { " token." }
             </p>
         </div>
-        <div class="row card justify-content-center d-grid gap-3">
-
+        <div class="card justify-content-center d-grid">
             <NftImage chain={(*selected_chain).clone()} domain={(*nft_id).clone()} />
             <NftInput chain={(*selected_chain).clone()} nft_id={(*nft_id).clone()} onchange={on_nft_id_change} />
-
-            <SigningExamplesComponent chain={(*selected_chain).clone()} nft_id={(*nft_id).clone()} {nonce} {on_signed} />
+            <Signing chain={(*selected_chain).clone()} nft_id={(*nft_id).clone()} {nonce} {on_signed} />
         </div>
         </div>
         <Footer />

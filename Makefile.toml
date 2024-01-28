@@ -8,7 +8,3 @@ args = ["build"]
 [tasks.test]
 command = "cargo"
 args = ["test"]
-
-[tasks.build-frontend]
-command = "trunk"
-args = ["build", "--config", "frontend/trunk.toml"]

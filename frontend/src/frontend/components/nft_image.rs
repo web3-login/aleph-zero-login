@@ -20,13 +20,11 @@ pub fn nft_image(props: &Props) -> Html {
 
     html! {
         <div class="nft-image">
-        <div class="card">
             <div class="card-body">
                 <a href={url} target="_blank" rel="noopener noreferrer">
                 <img src={img_url} class="card-img-top" alt={format!("NFT image for {}", props.domain)} />
                 </a>
             </div>
-        </div>
         </div>
     }
 }

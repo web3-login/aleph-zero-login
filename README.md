@@ -102,7 +102,7 @@ cargo build
 ### 🖥 Develop frontend
 
 ```sh
-trunk serve
+cd frontend && trunk serve
 ```
 
 ### 🚀 Run backend

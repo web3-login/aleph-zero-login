@@ -14,7 +14,7 @@ pub struct Props {
     pub on_signed: Callback<Signature>,
 }
 
-pub struct SigningExamplesComponent {
+pub struct Signing {
     stage: SigningStage,
 }
 
@@ -40,13 +40,13 @@ pub enum Message {
     ReceivedSignature(Vec<u8>),
 }
 
-impl Component for SigningExamplesComponent {
+impl Component for Signing {
     type Message = Message;
 
     type Properties = Props;
 
     fn create(_ctx: &Context<Self>) -> Self {
-        SigningExamplesComponent {
+        Signing {
             stage: SigningStage::EnterMessage,
         }
     }
