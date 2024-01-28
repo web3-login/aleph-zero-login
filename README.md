@@ -135,3 +135,17 @@ docker-compose up
 ## 🚫 Disclaimer
 
 🤖 This is not an official Azero ID project. I am not affiliated with the Azero ID team. Use at your own risk.
+
+## 📚 Resources
+
+### Dall-E generated icon
+
+![Icon](azero-login-icon.png)
+
+Prompt: Design a modern and sleek icon representing an OpenID Connect server integrated with Aleph Zero blockchain technology. The icon should symbolize secure digital identity verification and blockchain features. It should include visual elements like a shield for security, a key to represent access, and blockchain motifs like connected blocks or nodes. The color scheme should be a blend of blues and greens, conveying a sense of trust, security, and technology. The overall look should be futuristic and professional, suitable for a tech-focused audience.
+
+### Dall-E generated banner
+
+![Banner](azero-login-banner.png)
+
+Prompt: Create a banner for a hackathon project page, featuring the concept of 'Azero Web3-Login'. The banner should visually represent the integration of a crypto wallet with the OpenID Connect server. Include imagery that symbolizes secure digital identity verification, such as a shield and a digital wallet. The design should incorporate blockchain elements like connected blocks or nodes and include the text 'Azero Web3-Login' prominently. The color scheme should be a blend of blues and greens, portraying trust, security, and a connection to blockchain technology. The style should be modern, professional, and appealing to a tech-savvy audience.
